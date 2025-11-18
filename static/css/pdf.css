@@ -1,0 +1,65 @@
+@page {
+    size: A4;
+    margin: 0 0 4cm 0;
+    white-space: pre;   /* <-- REQUIRED so \A becomes a real line break */
+
+    @bottom-center {
+        content: '_______________________________________________________________________________________\A'
+                 'Adresa: Rr. "Kongresi i Manastirit", Garnizoni Skënderbej, Tiranë                    '
+                 "Tel: 510-1036            "
+                 '   Faqe ' counter(page);
+        font-size: 10pt;
+        font-family: "Times New Roman", serif;
+        text-align: center;
+    }
+}
+
+
+
+
+
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+/* A4 page = whole body */
+body.container {
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    background: #ffffff;
+    box-sizing: border-box;
+
+    /* SAME margin on all sides for the text box */
+    padding-top: 2.5cm;
+    padding-left: 2.5cm;
+    padding-right: 2.5cm;
+    padding-bottom: 2.5cm;      /* was 3.5cm */
+
+    border: 1px solid #000;
+    position: relative;         /* anchor for footer */
+}
+
+.titullari {
+    text-align: center;
+}
+
+/* Footer glued to the bottom margin of the A4 sheet */
+footer {
+    font-size: 10pt;
+    text-align: center;
+
+    position: absolute;
+    left: 2.5cm;                /* align with text box */
+    right: 2.5cm;
+    bottom: 2.5cm;              /* EXACTLY at bottom margin of the A4 */
+}
+
+@media print {
+    .no-pdf {
+        display: none !important;
+    }
+}

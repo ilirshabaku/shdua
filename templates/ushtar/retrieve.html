@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="sq">
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Vërtetimi</title>
+    <!-- (Optional) Bootstrap for your form-control classes -->
+    <link rel="stylesheet" href="{% static 'css/fleta_a4.css' %}">
+    <link rel="stylesheet" href="{% static 'css/global_font.css' %}">
+    </head>
+    <body class="container">
+        <header>
+            <img src="{% static 'img/koka_e_shkreses.jpg' %}" alt="Koka e shkresës image" style="width: 100%;">
+            <div style="text-align: center;">
+                <span style=" font-size: 7pt; font-weight: bold; font-family: 'Arial Black', Gadget, sans-serif;">R E P U B L I K A&nbsp;&nbsp;E&nbsp;&nbsp;S H Q I P Ë R I S Ë</SPAN><br>
+                <span style=" font-size: 14pt; font-weight: bold; font-family: 'Baskerville Old Face', serif; ">MINISTRIA E MBROJTJES</SPAN><br>
+                <span style="font-size: 12pt; font-family: 'Times New Roman', Times, serif; font-weight: bold; ">SHTABI I PËRGJITHSHËM I FORCAVE TË ARMATOSURA</SPAN><br>
+                <span style="font-size: 12pt; font-family: 'Times New Roman', Times, serif; font-weight: bold; ">QENDRA E PERSONEL REKRUTIMIT</SPAN><br>
+            </div>
+            <div><br><br></div>
+            <div style="text-align: center;">
+                <div style="display:flex; justify-content: space-between; font-size: 12pt; font-family: 'Times New Roman', Times, serif; ">
+                    <span>Nr. ___________ prot.</span>     <span>Tiranë, më ____.____.{% now "Y" %}</span>
+                </div>
+                <br>
+                <span style="font-size: 12pt; font-family: 'Times New Roman', Times, serif; font-weight: bold; ">VËRTETIM</SPAN><br><br>
+            </div>
+
+        </header>  
+
+        <main>
+            <div style="text-align: justify; font-size: 12pt; font-family: 'Times New Roman', Times, serif;">      
+                {% if kryer %}
+                    <span>
+                        Vërtetojmë se shtetasi <strong style="text-transform: capitalize;">{{ obj.name }} {{ obj.father_name }} <span style="text-transform: uppercase;">{{ obj.family_name }}</span></strong>, 
+                        i vitlindjes {{ obj.dob.year }}, me shenjë personale {{ obj.personal_id }}, ka kryer Shërbimin e Detyrueshëm Ushtarak Aktiv nga data {{ obj.shdua_start_date_1|date:"d.m.Y" }} deri më {{ obj.shdua_finish_date_1|date:"d.m.Y" }}, 
+                        në Repartin Ushtarak nr. {{ obj.unit_nr_1st_time }}. 
+                    </span>
+                    <br><br>
+                    <span>Lëshohet për efekt dokumenti.</span>
+                    <br><br><br>
+
+                {% endif %}
+            </div>
+            <div>
+                ---------------------------------------------
+                <p>DEBUG: kryer = {{ kryer }}</p>
+                <p>DEBUG: nje periudhe {{ nje_periudhe }}</p>
+                <p>DEBUG: dy periudha {{ dy_periudha }}</p>
+                <p>DEBUG: tre periudha {{ tre_periudha }}</p>
+                ---------------------------------------------
+            </div>
+            <div class="no-pdf">
+                <a href="{% url 'pdf' pk=obj.pk %}"
+                    class="btn btn-primary btn-lg px-4 py-1 d-inline-flex align-items-center gap-2 rounded-3 shadow-sm align-self-start"
+                    style="min-width: 180px; ">
+                   Shkarko PDF
+                </a>
+            </div>
+
+            <br><br>
+            <div class="titullari">
+                <span>
+                    <strong style="text-transform: uppercase">{{ titullari_aktiv.funksioni }}</strong> 
+                    <br>
+                    <strong style="text-transform: capitalize">{{ titullari_aktiv.grada }} {{ titullari_aktiv.emri }} {{ titullari_aktiv.mbiemri }}</strong>
+                </span>
+            </div>
+            <p></p>
+
+        </main>
+
+        <footer class="no-pdf">
+            <p>
+                <!-- Vijë e drejtë -->
+                <span>__________________________________________________________________________________________</span>
+                <br>
+
+                <!-- Rreshti me adresë / tel / faqe në një rresht -->
+                <span style="display: flex; justify-content: space-between; padding-left: 2.5cm; padding-right: 2.5cm;">
+                    <span>Adresa: Rr. Kongresi i Manastirit, Garnizoni Skënderbej, Tiranë</span>
+                    <span>Tel: 510-1036</span>
+                    <span>Faqe 1</span>
+                </span>
+            </p>
+        </footer>
+
+
+    </body>
+</html>
+
+

@@ -1,0 +1,38 @@
+
+/* === Embed Times New Roman for PDF (absolute path) === */
+@font-face {
+    font-family: 'TimesNewRoman';
+    src: url("file:///{{ STATIC_ROOT }}/fonts/times.ttf") format('truetype');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'TimesNewRoman';
+    src: url("file:///{{ STATIC_ROOT }}/fonts/times-bold.ttf") format('truetype');
+    font-weight: bold;
+}
+
+/* === Global Body Settings === */
+body {
+    font-family: 'TimesNewRoman', Times, serif;
+    font-size: 12pt;
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
+}
+
+/* === Headings === */
+h1 {
+    text-align: center;
+    font-family: 'TimesNewRoman', Times, serif;
+    font-weight: bold;
+    font-size: 12pt;
+}
+/* === Bold Text === */
+strong, b {
+    font-family: 'TimesNewRoman', Times, serif;
+    font-weight: bold;
+    font-size: 12pt;
+}
+
+

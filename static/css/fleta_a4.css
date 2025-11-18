@@ -1,0 +1,34 @@
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+/* A4 page container applied to <body class="container"> */
+body.container {
+    width: 21cm;
+    height: 29.7cm;
+    margin: 0 auto;
+    background: #ffffff;
+    padding-left: 2.5cm;
+    padding-right: 2.5cm;
+    padding-top: 2.5cm;
+    padding-bottom: 3.5cm;   /* space reserved visually if you want */
+    box-sizing: border-box;
+    border: 1px solid #000;
+    position: relative;      /* ❶ anchor for the absolute footer */
+}
+
+.titullari {
+    text-align: center;
+}
+
+/* Footer pinned at bottom of the container */
+footer {
+    font-size: 10pt;
+    text-align: center;
+
+    position: absolute;      /* ❷ take it out of flow & pin it */
+    left: 0;
+    right: 0;                /* make it span full width */
+    bottom: 1.5cm;
+}
