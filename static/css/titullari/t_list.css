@@ -1,0 +1,126 @@
+/* --- Shared helper from previous pages --- */
+.btn-wide {
+    min-width: 180px;
+}
+
+/* ===== Buttons: warning & danger & small size ===== */
+.btn-warning {
+    background-color: #ffc107;
+    color: #000000;
+}
+
+.btn-warning:hover {
+    background-color: #ffca2c;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: #ffffff;
+}
+
+.btn-danger:hover {
+    background-color: #bb2d3b;
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+}
+
+/* ===== Text helpers ===== */
+.text-center {
+    text-align: center;
+}
+
+.text-muted {
+    color: #6c757d;
+}
+
+.py-4 {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+/* ===== Table layout ===== */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    max-width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    color: #212529;
+}
+
+.table th,
+.table td {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid #dee2e6;
+    text-align: left;
+}
+
+.table-sm th,
+.table-sm td {
+    padding: 0.25rem 0.5rem;
+}
+
+/* Header background */
+.table-light th {
+    background-color: #f8f9fa;
+    color: #212529;
+}
+
+/* Striped rows */
+.table-striped tbody tr:nth-child(odd) {
+    background-color: #f8f9fa;
+}
+
+/* Hover effect */
+.table-hover tbody tr:hover {
+    background-color: #e9ecef;
+}
+
+/* Vertical centering */
+.align-middle th,
+.align-middle td {
+    vertical-align: middle;
+}
+
+/* Width helper for table (50% width) */
+.w-50 {
+    width: 50%;
+}
+
+/* Left-aligned table container (no automatic centering) */
+.mx-left {
+    margin-left: 0;
+}
+
+/* Base button (you probably already have something like this) */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.45rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid transparent;
+    font-size: 0.95rem;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+/* Info button – similar to Bootstrap .btn-info */
+.btn-info {
+    background-color: #0dcaf0;   /* same as Bootstrap */
+    border-color: #0dcaf0;
+    color: #000000;
+}
+
+.btn-info:hover {
+    background-color: #31d2f2;   /* hover color like Bootstrap */
+    border-color: #25cff2;
+}

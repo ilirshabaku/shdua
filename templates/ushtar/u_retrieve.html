@@ -34,7 +34,7 @@
                 {% if kryer %}
                     <span>
                         Vërtetojmë se shtetasi <strong style="text-transform: capitalize;">{{ obj.name }} {{ obj.father_name }} <span style="text-transform: uppercase;">{{ obj.family_name }}</span></strong>, 
-                        i vitlindjes {{ obj.dob.year }}, me shenjë personale {{ obj.personal_id }}, ka kryer Shërbimin e Detyrueshëm Ushtarak Aktiv nga data {{ obj.shdua_start_date_1|date:"d.m.Y" }} deri më {{ obj.shdua_finish_date_1|date:"d.m.Y" }}, 
+                        i vitlindjes {{ obj.dob.year }}, me shenjë personale {{ obj.personal_sign }}, ka kryer Shërbimin e Detyrueshëm Ushtarak Aktiv nga data {{ obj.shdua_start_date_1|date:"d.m.Y" }} deri më {{ obj.shdua_finish_date_1|date:"d.m.Y" }}, 
                         në Repartin Ushtarak nr. {{ obj.unit_nr_1st_time }}. 
                     </span>
                     <br><br>
@@ -46,9 +46,11 @@
             <div>
                 ---------------------------------------------
                 <p>DEBUG: kryer = {{ kryer }}</p>
-                <p>DEBUG: nje periudhe {{ nje_periudhe }}</p>
-                <p>DEBUG: dy periudha {{ dy_periudha }}</p>
-                <p>DEBUG: tre periudha {{ tre_periudha }}</p>
+                <p>DEBUG: paguar = {{ paguar }}</p>
+                <p>DEBUG: paguar pjeserisht = {{ paguar_pjeserisht }}</p>
+                <p>DEBUG: nje periudhe = {{ periudha_1 }}</p>
+                <p>DEBUG: dy periudha = {{ periudha_2 }}</p>
+                <p>DEBUG: tre periudha = {{ periudha_3 }}</p>
                 ---------------------------------------------
             </div>
             <div class="no-pdf">

@@ -7,9 +7,9 @@ from .views_titullari import  titullari_dashboard, titullari_list, titullari_cre
 urlpatterns = [
     path('', ushar_list, name='ushtar_list'),
     path('ushtar_create/', ushtar_create, name='ushtar_create'),
-    path('ushtar_<str:pk>/retrieve/', ushtar_retrieve, name='ushtar_retrieve'),
-    path('ushtar/<str:pk>/update/', ushtar_update, name='ushtar_update'),
-    path('ushtar/<str:pk>/delete/', ushtar_delete, name='ushtar_delete'),
+    path('ushtar_<int:pk>/retrieve/', ushtar_retrieve, name='ushtar_retrieve'),
+    path('ushtar/<int:pk>/update/', ushtar_update, name='ushtar_update'),
+    path('ushtar/<int:pk>/delete/', ushtar_delete, name='ushtar_delete'),
 
     path('titullari_dashboard/', titullari_dashboard, name='titullari_dashboard'),
     path('titullari_list/', titullari_list, name='titullari_list'),
@@ -17,7 +17,7 @@ urlpatterns = [
     path('titullari/<int:pk>/update/', titullari_update, name='titullari_update'),
     path('titullari/<int:pk>/delete/', titullari_delete, name='titullari_delete'),
 
-    path('<str:pk>/pdf', vertetimi_pdf, name='pdf'),
+    path('<int:pk>/pdf', vertetimi_pdf, name='pdf'),
 ]
 
 

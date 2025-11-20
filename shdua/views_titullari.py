@@ -8,7 +8,7 @@ def titullari_list(request):
     qs = Titullari.objects.all()
    
     context = {'qs': qs}
-    template_name = 'titullari/list.html'
+    template_name = 'titullari/t_list.html'
     return render(request, template_name, context)
 
 def titullari_create(request):
@@ -23,7 +23,7 @@ def titullari_create(request):
     context = {
         "form": form
         }
-    template_name = 'titullari/create.html'
+    template_name = 'titullari/t_create.html'
     return render(request, template_name, context)
 
 def titullari_dashboard(request):
@@ -49,7 +49,7 @@ def titullari_dashboard(request):
         form = TitullariSelectForm(initial={"titullari": current})
 
     context = {"form": form}
-    return render(request, "titullari/dashboard.html", context)
+    return render(request, "titullari/t_dashboard.html", context)
 
 def titullari_update(request, pk):
     obj = get_object_or_404(Titullari, pk=pk)
@@ -63,7 +63,7 @@ def titullari_update(request, pk):
     else:
         form = TitullariForm(instance=obj)
     context = {'obj': obj, 'form': form}
-    template_name = 'titullari/update.html'
+    template_name = 'titullari/t_update.html'
     return render(request, template_name, context)
 
 def titullari_delete(request, pk):
@@ -73,6 +73,6 @@ def titullari_delete(request, pk):
         return redirect('titullari_list')
 
     context = {'obj': obj}
-    template_name = 'titullari/delete.html'
+    template_name = 'titullari/t_delete.html'
     return render(request, template_name, context)
 

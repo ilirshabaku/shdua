@@ -12,43 +12,61 @@ def flags_helper(pk):
     try:
         ushtari = Ushtari.objects.get(pk=pk)
     except Ushtari.DoesNotExist:
-        return False, False, False, False, False
+        return False, False, False, False, False, False, 0, 0, 0
 
     kryer = False
     paguar = False
-    nje_periudhe = False
-    dy_periudha = False
-    tre_periudha = False
-    
-    if ushtari.paguar == 'Po':
+    paguar_pjeserisht = False
+    periudha_1 = False
+    periudha_2 = False
+    periudha_3 = False
+    dite_te_kryera_1 = 0
+    dite_te_kryera_2 = 0
+    dite_te_kryera_3 = 0
+
+
+    if ushtari.nr_act_paguar and ushtari.date_of_act_paguar:
         paguar = True
 
-    if  ushtari.shdua_start_date_1 and ushtari.shdua_finish_date_1:
-        if ushtari.shdua_finish_date_1 > ushtari.shdua_start_date_1:
+    if  ushtari.shdua_start_date_1 and ushtari.shdua_finish_date_1 \
+        and ushtari.shdua_start_date_1 <= ushtari.shdua_finish_date_1:
+        dite_te_kryera_1 = (ushtari.shdua_finish_date_1 - ushtari.shdua_start_date_1).days + 1
+        periudha_1 = True
+        print(f"DEBUG: periudha_e_pare {dite_te_kryera_1} ditë")
+        if dite_te_kryera_1 >= 350:
             kryer = True
-            nje_periudhe = True
-        else:
-            kryer = False
 
-    if nje_periudhe and (ushtari.shdua_start_date_2 and ushtari.shdua_finish_date_2):
-        if ushtari.shdua_finish_date_2 > ushtari.shdua_start_date_2:
-            dy_periudha = True
+            
+    if periudha_1 and (ushtari.shdua_start_date_2 and ushtari.shdua_finish_date_2) \
+        and (ushtari.shdua_start_date_2 <= ushtari.shdua_finish_date_2):
+        dite_te_kryera_2 = (ushtari.shdua_finish_date_2 - ushtari.shdua_start_date_2).days + 1 
+        periudha_2 = True
+        print(f"DEBUG: periudha_e_dyte {dite_te_kryera_2} ditë")
+        if dite_te_kryera_1 + dite_te_kryera_2 >= 350:
+            kryer = True
 
-    if dy_periudha and ushtari.shdua_start_date_3 and ushtari.shdua_finish_date_3:
-        if ushtari.shdua_finish_date_3 > ushtari.shdua_start_date_3:
-            tre_periudha = True
-    return kryer, nje_periudhe, dy_periudha, tre_periudha, paguar
+
+    if periudha_2 and (ushtari.shdua_start_date_3 and ushtari.shdua_finish_date_3) \
+        and (ushtari.shdua_start_date_3 <= ushtari.shdua_finish_date_3):
+        dite_te_kryera_3 = (ushtari.shdua_finish_date_3 - ushtari.shdua_start_date_3).days + 1
+        periudha_3 = True
+        print(f"DEBUG: periudha_e_trete {dite_te_kryera_3} ditë")
+        if dite_te_kryera_1 + dite_te_kryera_2 + dite_te_kryera_3 >= 350:
+            kryer = True
+
+    return kryer, paguar, paguar_pjeserisht, periudha_1, periudha_2, periudha_3, dite_te_kryera_1, dite_te_kryera_2, dite_te_kryera_3
+
 
 def ushtar_create(request):
     if request.method == "POST":
         form = UshtariForm(request.POST)
         if form.is_valid():
-            form.save()
+            form = form.save()
             return redirect("ushtar_list")
     else:
         form = UshtariForm()
     context = {"form": form}
-    template_name = "ushtar/create.html"
+    template_name = "ushtar/u_create.html"
     return render(request, template_name, context)
 
 def ushar_list (request):
@@ -71,9 +89,9 @@ def ushar_list (request):
         qs = qs.filter(family_name__icontains=family_name_search)
 
     if id_search:
-        qs = qs.filter(personal_id__icontains=id_search)
+        qs = qs.filter(personal_sign__icontains=id_search)
 
-    qs = qs.order_by('family_name', 'name', 'personal_id')  
+    qs = qs.order_by('family_name', 'name', 'personal_sign')  
 
     paginator = Paginator(qs, 10)  # 10 per page
     page_obj = paginator.get_page(request.GET.get('page'))
@@ -88,7 +106,7 @@ def ushar_list (request):
         'page_obj': page_obj,
         }
 
-    template_name = 'ushtar/list.html'
+    template_name = 'ushtar/u_list.html'
     
     return render(request, template_name, context)
 
@@ -97,7 +115,7 @@ def ushtar_update(request, pk):
     if request.method == 'POST':
         form = UshtariForm(request.POST, instance=obj)
         if form.is_valid():
-            obj = form.save()
+            form.save()
             return redirect('ushtar_list')
         else:
             # DEBUG: see why it didn't redirect
@@ -107,7 +125,7 @@ def ushtar_update(request, pk):
     
     context = {'form': form, 'obj': obj} 
 
-    template_name = 'ushtar/update.html'
+    template_name = 'ushtar/u_update.html'
     return render(request, template_name, context)
 
 def ushtar_delete(request, pk):
@@ -117,7 +135,7 @@ def ushtar_delete(request, pk):
         obj.delete()
         return redirect('ushtar_list')
     
-    template_name = 'ushtar/delete.html'
+    template_name = 'ushtar/u_delete.html'
 
     context = {'obj': obj}
 
@@ -128,26 +146,34 @@ def ushtar_retrieve(request, pk):
     obj = get_object_or_404(Ushtari, pk=pk)
     titullari_aktiv = Titullari.objects.filter(is_active=True).first()
 
-    kryer, paguar, nje_periudhe, dy_periudha, tre_periudha = flags_helper(obj.pk)
+    kryer, paguar, paguar_pjeserisht, periudha_1, periudha_2, periudha_3, dite_te_kryera_1, dite_te_kryera_2, dite_te_kryera_3 = flags_helper(obj.pk)
 
     kryer = kryer
     paguar = paguar
-    nje_periudhe = nje_periudhe
-    dy_periudha = dy_periudha
-    tre_periudha = tre_periudha
+    paguar_pjeserisht = paguar_pjeserisht
+    periudha_1 = periudha_1
+    periudha_2 = periudha_2
+    periudha_3 = periudha_3
+    dite_te_kryera_1 = dite_te_kryera_1
+    dite_te_kryera_2 = dite_te_kryera_2
+    dite_te_kryera_3 = dite_te_kryera_3
 
 
     context = {
         'titullari_aktiv': titullari_aktiv,
         'obj': obj, 
         'kryer': kryer, 
+        'paguar_pjeserisht': paguar_pjeserisht,
         'paguar': paguar,
-        'nje_periudhe': nje_periudhe, 
-        'dy_periudha': dy_periudha, 
-        'tre_periudha': tre_periudha,
+        'periudha_1': periudha_1,
+        'periudha_2': periudha_2,
+        'periudha_3': periudha_3,
+        'dite_te_kryera_1': dite_te_kryera_1,
+        'dite_te_kryera_2': dite_te_kryera_2,
+        'dite_te_kryera_3': dite_te_kryera_3,
         }
 
-    template_name = 'ushtar/retrieve.html'
+    template_name = 'ushtar/u_retrieve.html'
 
     return render(request, template_name, context)
 
@@ -155,13 +181,17 @@ def ushtar_retrieve(request, pk):
 def vertetimi_pdf(request, pk):
     obj = get_object_or_404(Ushtari, pk=pk)
     titullari_aktiv = Titullari.objects.filter(is_active=True).first()
-    kryer, paguar, nje_periudhe, dy_periudha, tre_periudha = flags_helper(obj.pk)
+    kryer, paguar, paguar_pjeserisht, periudha_1, periudha_2, periudha_3, dite_te_kryera_1, dite_te_kryera_2, dite_te_kryera_3 = flags_helper(obj.pk)
 
     kryer = kryer
     paguar = paguar
-    nje_periudhe = nje_periudhe
-    dy_periudha = dy_periudha
-    tre_periudha = tre_periudha
+    paguar_pjeserisht = paguar_pjeserisht
+    periudha_1 = periudha_1
+    periudha_2 = periudha_2
+    periudha_3 = periudha_3
+    dite_te_kryera_1 = dite_te_kryera_1
+    dite_te_kryera_2 = dite_te_kryera_2
+    dite_te_kryera_3 = dite_te_kryera_3
 
     base_url = request.build_absolute_uri('/')
 
@@ -173,13 +203,17 @@ def vertetimi_pdf(request, pk):
         'titullari_aktiv': titullari_aktiv,
         
         'kryer': kryer, 
-        'paguar': paguar, 
-        'nje_periudhe': nje_periudhe,
-        'dy_periudha': dy_periudha, 
-        'tre_periudha': tre_periudha,
+        'paguar_pjeserisht': paguar_pjeserisht,
+        'paguar': paguar,
+        'periudha_1': periudha_1,
+        'periudha_2': periudha_2,
+        'periudha_3': periudha_3,
+        'dite_te_kryera_1': dite_te_kryera_1,
+        'dite_te_kryera_2': dite_te_kryera_2,
+        'dite_te_kryera_3': dite_te_kryera_3,
     }
 
-    html_string = render_to_string("ushtar/retrieve.html", context, request=request)
+    html_string = render_to_string("ushtar/u_retrieve.html", context, request=request)
 
     css_url = request.build_absolute_uri(static('css/pdf.css'))
     css = CSS(url=css_url)

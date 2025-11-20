@@ -1,0 +1,338 @@
+/* ===== Base ===== */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* Container similar to .container */
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* ===== Utility colors & backgrounds ===== */
+
+.bg-secondary {
+    background-color: #b2b9c0; /* gray */
+}
+
+.bg-info {
+    background-color: #0dcaf0; /* cyan-ish */
+}
+
+.text-white {
+    color: #ffffff;
+}
+
+.text-muted {
+    color: #6c757d;
+}
+
+.table-light {
+    background-color: #f8f9fa;
+    color: #212529;
+}
+
+/* ===== Spacing utilities ===== */
+
+/* Padding */
+.p-4 {
+    padding: 1.5rem;         /* 24px */
+}
+
+.py-4 {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+.px-4 {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+.py-1 {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+}
+
+/* Margin bottom */
+.mb-2 {
+    margin-bottom: 0.5rem;
+}
+
+.mb-3 {
+    margin-bottom: 1rem;
+}
+
+.mb-4 {
+    margin-bottom: 1.5rem;
+}
+
+/* Margin end & start */
+.me-2 {
+    margin-right: 0.5rem;
+}
+
+.ms-auto {
+    margin-left: auto;
+}
+
+/* Gap utilities */
+.g-2 {
+    gap: 0.5rem;
+}
+
+.gap-3 {
+    gap: 1rem;
+}
+
+/* ===== Rounded & shadow ===== */
+
+.rounded-3 {
+    border-radius: 0.75rem;
+}
+
+.shadow-sm {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+/* ===== Flex utilities ===== */
+
+.d-flex {
+    display: flex;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.align-items-start {
+    align-items: flex-start;
+}
+
+.align-items-center {
+    align-items: center;
+}
+
+.justify-content-between {
+    justify-content: space-between;
+}
+
+.justify-content-center {
+    justify-content: center;
+}
+
+.align-self-start {
+    align-self: flex-start;
+}
+
+/* For the outer form row */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* ===== Typography ===== */
+
+h1 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+/* Centering and alignment */
+.text-center {
+    text-align: center;
+}
+
+/* ===== Forms ===== */
+
+.form-control {
+    display: block;
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+    outline: none;
+}
+
+.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.1rem rgba(13, 110, 253, 0.25);
+}
+
+/* When you add bg-info + text-white via template logic */
+.form-control.bg-info {
+    border-color: #0dcaf0;
+}
+
+/* ===== Buttons ===== */
+
+.btn {
+    display: inline-block;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid transparent;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    border-radius: 0.375rem;
+    background-color: transparent;
+    color: inherit;
+}
+
+/* Sizes */
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+.btn-lg {
+    padding: 0.5rem 1rem;
+    font-size: 1.1rem;
+}
+
+/* Button colors */
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: #ffffff;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: #ffffff;
+}
+
+.btn-info {
+    background-color: #0dcaf0;
+    border-color: #0dcaf0;
+    color: #000000;
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: #000000;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: #ffffff;
+}
+
+/* Outline style */
+.btn-outline-secondary {
+    background-color: transparent;
+    border-color: #6c757d;
+    color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: #ffffff;
+}
+
+/* Flex button with icon/text center */
+.d-inline-flex {
+    display: inline-flex;
+}
+
+/* Optional: special style for Titullari button if needed */
+.btn-titullari {
+    font-weight: 500;
+}
+
+/* ===== Tables ===== */
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+    color: #212529;
+    background-color: transparent;
+    font-size: 0.9rem;
+}
+
+
+.table th,
+.table td {
+    padding: 0.35rem 0.5rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* striped rows */
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* hover rows */
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* small table */
+.table-sm th, .table-sm td {
+    padding: 0.25rem 0.4rem;
+}
+
+/* vertical alignment */
+.align-middle {
+    vertical-align: middle;
+}
+
+/* ===== Misc text spacing ===== */
+
+.py-4 {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+.mb-2 {
+    margin-bottom: 0.5rem;
+}
+
+/* ===== Layout tweaks for your specific structure ===== */
+
+/* Column that holds the search inputs (had inline max-width: 320px) */
+.search-column {
+    max-width: 320px;
+}
+
+/* Wide buttons on the right (had inline min-width: 180px) */
+.btn-wide {
+    min-width: 180px;
+}
+
+.table th {
+    text-align: left;
+}
+
+.search-column { max-width: 320px; }
+
+.titullari-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.75rem;
+}
+.btn-wide { min-width: 180px; }

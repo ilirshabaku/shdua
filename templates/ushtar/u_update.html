@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="sq">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ndrysho</title>
+
+    <!-- Your custom CSS (no Bootstrap) -->
+    <link rel="stylesheet" href="{% static 'css/ushtar/u_create.css' %}">
+    <link rel="stylesheet" href="{% static 'css/ushtar/u_update.css' %}">
+  </head>
+
+  <body class="bg-secondary text-white p-4 rounded-3">
+    <main class="container py-4">
+      <h1>Ndrysho të dhënat e ushtarit</h1>
+
+      <div class="flex-grow-1" style="max-width: 680px;">
+        <form method="post" action="{% url 'ushtar_update' pk=obj.pk %}">
+          {% csrf_token %}
+          {{ form.as_p }}
+
+          <button type="submit" class="btn btn-primary">
+            Ruaj
+          </button>
+        </form>
+      </div>
+    </main>
+  </body>
+</html>

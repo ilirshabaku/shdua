@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="sq">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Fshi titullarin</title>
+
+        <!-- Your custom CSS instead of Bootstrap -->
+        <link rel="stylesheet" href="{% static 'css/titullari/t_delete.css' %}">
+        <link rel="stylesheet" href="{% static 'css/titullari/t_create.css' %}">
+    </head>
+
+    <body class="bg-light">
+        <main class="container mt-5">
+            <h1 class="text-center mb-4">Konfrimi i fshirjes</h1>
+
+            <div class="alert alert-warning text-center" role="alert">
+                A jeni të sigurt që po kërkoni fshini
+                <strong>{{ obj.emri }} {{ obj.mbiemri }}</strong>
+                nga regjistri?
+            </div>
+
+            <form method="post" class="text-center">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Konfirmo</button>
+                <a href="{% url 'titullari_list' %}" class="btn btn-secondary">Mos e fshi</a>
+            </form>
+        </main>
+    </body>
+</html>

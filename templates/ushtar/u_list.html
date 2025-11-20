@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="sq">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SHDUA</title>
+    <link rel="stylesheet" href="{% static 'css/ushtar/u_list.css' %}">
+</head>
+<body class="bg-secondary text-white p-4 rounded-3">
+    <main class="container py-4">
+        <h1>Gjej ushtar</h1>
+
+        <!-- FORM (left) + TITULLARI BLOCK (right) IN ONE FLEX ROW -->
+        <div class="d-flex align-items-start justify-content-between gap-3 flex-wrap mb-4">
+            <!-- LEFT: forma e kërkimit -->
+            <form method="get" class="search-column">
+                <div class="mb-2">
+                    <input type="text" name="name_search"
+                           class="form-control {% if name_search %}bg-info text-white{% endif %}"
+                           placeholder="Emri" value="{{ name_search }}">
+                </div>
+                <div class="mb-2">
+                    <input type="text" name="father_name_search"
+                           class="form-control {% if father_name_search %}bg-info text-white{% endif %}"
+                           placeholder="Atësia" value="{{ father_name_search }}">
+                </div>
+                <div class="mb-2">
+                    <input type="text" name="family_name_search"
+                           class="form-control {% if family_name_search %}bg-info text-white{% endif %}"
+                           placeholder="Mbiemri" value="{{ family_name_search }}">
+                </div>
+                <div class="mb-3">
+                    <input type="text" name="id_search"
+                           class="form-control {% if id_search %}bg-info text-white{% endif %}"
+                           placeholder="Shenja personale" value="{{ id_search }}">
+                </div>
+
+                <div class="text-white">
+                    <button type="submit" class="btn btn-primary me-2">🔍 Kërko</button>
+                    <a href="{% url 'ushtar_list' %}" class="btn btn-secondary">❌ Pastro kërkimin</a>
+                </div>
+            </form>
+
+            <!-- RIGHT: Titullari dhe + Shto ushtar -->
+            <div class="titullari-block; justify-content: end;">
+                <a href="{% url 'titullari_dashboard' %}"
+                   class="btn btn-info btn-lg px-4 py-1 d-inline-flex justify-content-center align-items-center rounded-3 shadow-sm align-self-start btn-titullari btn-wide">
+                    Titullari
+                </a>
+                <br><br>
+                <span style="color: black; text-align: end;">
+                    Titullari aktual i zgjedhur për shkresat: <br>
+                    <strong>
+                        {{ titullari_aktiv.funksioni }}
+                        {{ titullari_aktiv.grada }}
+                        {{ titullari_aktiv.emri }}
+                        {{ titullari_aktiv.mbiemri }}
+                    </strong>
+                </span>
+                <br><br><div></div><br style="margin-top: 12px;">
+                <a href="{% url 'ushtar_create' %}"
+                   class="btn btn-primary btn-lg px-4 py-1 d-inline-flex align-items-center gap-2 rounded-3 shadow-sm align-self-start btn-wide"
+                   style="margin-top: 1.5rem;">
+                    + Shto ushtar
+                </a>
+            </div>
+        </div>
+
+        <!-- Numri i rezultateve -->
+        <div>
+            <p class="mb-2">{{ page_obj.paginator.count }} rezultate</p>
+        </div>
+        
+        <!-- Tabela -->
+        <div class="table-responsive">
+            <table class="table table-striped table-hover table-sm align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Emër</th>
+                        <th>Atësi</th>
+                        <th>Mbiemër</th>
+                        <th>Vendlindja</th>
+                        <th>Datëlindja</th>
+                        <th>Shenja personale</th>
+                        <th>Shiko</th>
+                        <th>Ndrysho</th>
+                        <th>Fshi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for q in qs %}
+                        <tr>
+                            <td>{{ q.name }}</td>
+                            <td>{{ q.father_name }}</td>
+                            <td>{{ q.family_name }}</td>
+                            <td>{{ q.pob }}</td>
+                            <td>{{ q.dob|date:"d.m.Y" }}</td>
+                            <td>{{ q.personal_sign }}</td>
+                            <td><a href="{% url 'ushtar_retrieve' pk=q.pk %}" class="btn btn-info btn-sm">Shiko</a></td>
+                            <td><a href="{% url 'ushtar_update' pk=q.pk %}" class="btn btn-warning btn-sm">Ndrysho</a></td>
+                            <td><a href="{% url 'ushtar_delete' pk=q.pk %}" class="btn btn-danger btn-sm">Fshi</a></td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="9" class="text-center text-muted py-4">Asnjë rezultat.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Paginimi (ruan edhe id_search) -->
+        <nav class="d-flex justify-content-between">
+            {% if page_obj.has_previous %}
+                <a class="btn btn-outline-secondary"
+                   href="?name_search={{ name_search }}&father_name_search={{ father_name_search }}&family_name_search={{ family_name_search }}&id_search={{ id_search }}&page={{ page_obj.previous_page_number }}">
+                    ← Më parë
+                </a>
+            {% else %}
+                <span></span>
+            {% endif %}
+
+            <span>Faqja {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+
+            {% if page_obj.has_next %}
+                <a class="btn btn-outline-secondary"
+                   href="?name_search={{ name_search }}&father_name_search={{ father_name_search }}&family_name_search={{ family_name_search }}&id_search={{ id_search }}&page={{ page_obj.next_page_number }}">
+                    Më pas →
+                </a>
+            {% endif %}
+        </nav>
+    </main>
+</body>
+</html>

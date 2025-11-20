@@ -1,0 +1,4 @@
+git remote -v
+git add .
+git commit -m "Me CSS jo me bootstrap"
+git push origin main

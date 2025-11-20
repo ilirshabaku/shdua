@@ -1,0 +1,56 @@
+/* ==== Background & text utilities ==== */
+.bg-light {
+    background-color: #f8f9fa;
+}
+
+/* Already have .text-white, add text-center too */
+.text-center {
+    text-align: center;
+}
+
+/* ==== Margin helpers ==== */
+.mt-5 {
+    margin-top: 3rem;
+}
+
+.mb-4 {
+    margin-bottom: 1.5rem;
+}
+
+/* ==== Alert box (similar to Bootstrap) ==== */
+.alert {
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.375rem;
+    border: 1px solid transparent;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+.alert-warning {
+    color: #664d03;
+    background-color: #fff3cd;
+    border-color: #ffecb5;
+}
+
+/* ==== Buttons (extend what you already have) ==== */
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: #ffffff;
+}
+
+.btn-danger:hover {
+    background-color: #bb2d3b;
+    border-color: #b02a37;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: #ffffff;
+}
+
+.btn-secondary:hover {
+    background-color: #5c636a;
+    border-color: #565e64;
+}
