@@ -31,7 +31,7 @@
 
         <main>
             <div style="text-align: justify; font-size: 12pt; font-family: 'Times New Roman', Times, serif;">      
-                {% if kryer %}
+                {% if kryer_1 %}
                     <span>
                         Vërtetojmë se shtetasi <strong style="text-transform: capitalize;">{{ obj.name }} {{ obj.father_name }} <span style="text-transform: uppercase;">{{ obj.family_name }}</span></strong>, 
                         i vitlindjes {{ obj.dob.year }}, me shenjë personale {{ obj.personal_sign }}, ka kryer Shërbimin e Detyrueshëm Ushtarak Aktiv nga data {{ obj.shdua_start_date_1|date:"d.m.Y" }} deri më {{ obj.shdua_finish_date_1|date:"d.m.Y" }}, 
@@ -40,19 +40,67 @@
                     <br><br>
                     <span>Lëshohet për efekt dokumenti.</span>
                     <br><br><br>
+                {% elif kryer_2 %}
+                    <span>
+                        Vërtetojmë se shtetasi <strong style="text-transform: capitalize;">{{ obj.name }} {{ obj.father_name }} <span style="text-transform: uppercase;">{{ obj.family_name }}</span></strong>, 
+                        i vitlindjes {{ obj.dob.year }}, me shenjë personale {{ obj.personal_sign }}, ka kryer Shërbimin e Detyrueshëm Ushtarak Aktiv nga data {{ obj.shdua_start_date_2|date:"d.m.Y" }} deri më {{ obj.shdua_finish_date_1|date:"d.m.Y" }}, 
+                        në Repartin Ushtarak nr. {{ obj.unit_nr_1st_time }} dhe nga data {{ obj.shdua_start_date_2|date:"d.m.Y" }} deri më {{ obj.shdua_finish_date_2|date:"d.m.Y" }}, 
+                        në Repartin Ushtarak nr. {{ obj.unit_nr_2nd_time }}. 
+                    </span>
+                    <br><br>
+                    <span>Lëshohet për efekt dokumenti.</span>
+                    <br><br><br>                                    
+                {% elif kryer_3 %}
+                    <span>
+                        Vërtetojmë se shtetasi <strong style="text-transform: capitalize;">{{ obj.name }} {{ obj.father_name }} <span style="text-transform: uppercase;">{{ obj.family_name }}</span></strong>, 
+                        i vitlindjes {{ obj.dob.year }}, me shenjë personale {{ obj.personal_sign }}, ka kryer Shërbimin e Detyrueshëm Ushtarak Aktiv në tri periudha:<br>
+                        1. Periudha e parë, nga data {{ obj.shdua_start_date_1|date:"d.m.Y" }} deri më {{ obj.shdua_finish_date_1|date:"d.m.Y" }} në Repartin Ushtarak nr. {{ obj.unit_nr_1st_time }}.<br>
+                        2. Periudha e dytë, nga data {{ obj.shdua_start_date_2|date:"d.m.Y" }} deri më {{ obj.shdua_finish_date_2|date:"d.m.Y" }} në Repartin Ushtarak nr. {{ obj.unit_nr_2nd_time }}. <br> 
+                        3. Periudha e tretë, nga data {{ obj.shdua_start_date_3|date:"d.m.Y" }} deri më {{ obj.shdua_finish_date_3|date:"d.m.Y" }} në Repartin Ushtarak nr. {{ obj.unit_nr_3rd_time }}.   
+                    </span>
+                    <br><br>
+                    <span>Lëshohet për efekt dokumenti.</span>
+                    <br><br><br>                                    
+                {% elif paguar %}
+                    <span>
+                        Vërtetojmë se shtetasi <strong style="text-transform: capitalize;">{{ obj.name }} {{ obj.father_name }} <span style="text-transform: uppercase;">{{ obj.family_name }}</span></strong>, 
+                        i vitlindjes {{ obj.dob.year }}, me shenjë personale {{ obj.personal_sign }}, e ka shlyer kryerjen e Shërbimit të Detyrueshëm Ushtarak Aktiv nëpërmjet pagesës, me mandat arkëtimi nr. {{ obj.nr_act_paguar }}, dt. {{obj.date_of_act_paguar|date:"d.m.Y" }}. 
+                    </span>
+                    <br><br>
+                    <span>Lëshohet për efekt dokumenti.</span>
+                    <br><br><br>
+                {% elif pa_afte %}
+                    <span>
+                        Vërtetojmë se shtetasi <strong style="text-transform: capitalize;">{{ obj.name }} {{ obj.father_name }} <span style="text-transform: uppercase;">{{ obj.family_name }}</span></strong>, 
+                        i vitlindjes {{ obj.dob.year }}, me shenjë personale {{ obj.personal_sign }}, nuk e ka kryer Shërbimin e Detyrueshëm Ushtarak Aktiv. Është deklaruar i paaftë nga vendimi i komisionit mjekësor ushtarak, arti {{ obj.epicrize }}. 
+                    </span>
+                    <br><br>
+                    <span>Lëshohet për efekt dokumenti.</span>
+                    <br><br><br>
+                {% elif pa_kryer %}
+                    <span>
+                        Vërtetojmë se shtetasi <strong style="text-transform: capitalize;">{{ obj.name }} {{ obj.father_name }} <span style="text-transform: uppercase;">{{ obj.family_name }}</span></strong>, 
+                        i vitlindjes {{ obj.dob.year }}, me shenjë personale {{ obj.personal_sign }}, bazuar në të dhënat që disponojmë, nuk e ka kryer Shërbimin e Detyrueshëm Ushtarak Aktiv. 
+                    </span>
+                    <br><br>
+                    <span>Lëshohet për efekt dokumenti.</span>
+                    <br><br><br>
 
                 {% endif %}
             </div>
-            <div>
+            <!-- <div style="font-size: 10pt;">
                 ---------------------------------------------
-                <p>DEBUG: kryer = {{ kryer }}</p>
+                <p>DEBUG: pa_kryer = {{ pa_kryer }}</p>
+                <p>DEBUG: kryer_1 = {{ kryer_1 }}</p>
+                <p>DEBUG: kryer_2 = {{ kryer_2 }}</p>
+                <p>DEBUG: kryer_3 = {{ kryer_3 }}</p>
                 <p>DEBUG: paguar = {{ paguar }}</p>
                 <p>DEBUG: i paafte = {{ pa_afte }}</p>
                 <p>DEBUG: nje periudhe = {{ periudha_1 }}</p>
                 <p>DEBUG: dy periudha = {{ periudha_2 }}</p>
                 <p>DEBUG: tre periudha = {{ periudha_3 }}</p>
                 ---------------------------------------------
-            </div>
+            </div> -->
             <div class="no-pdf">
                 <a href="{% url 'pdf' pk=obj.pk %}"
                     class="btn btn-primary btn-lg px-4 py-1 d-inline-flex align-items-center gap-2 rounded-3 shadow-sm align-self-start"

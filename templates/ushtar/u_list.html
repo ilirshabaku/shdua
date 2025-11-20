@@ -80,8 +80,8 @@
                         <th>Emër</th>
                         <th>Atësi</th>
                         <th>Mbiemër</th>
-                        <th>Vendlindja</th>
                         <th>Datëlindja</th>
+                        <th>Vendlindja</th>
                         <th>Shenja personale</th>
                         <th>Shiko</th>
                         <th>Ndrysho</th>
@@ -94,8 +94,8 @@
                             <td>{{ q.name }}</td>
                             <td>{{ q.father_name }}</td>
                             <td>{{ q.family_name }}</td>
-                            <td>{{ q.pob }}</td>
                             <td>{{ q.dob|date:"d.m.Y" }}</td>
+                            <td>{{ q.pob }}</td>
                             <td>{{ q.personal_sign }}</td>
                             <td><a href="{% url 'ushtar_retrieve' pk=q.pk %}" class="btn btn-info btn-sm">Shiko</a></td>
                             <td><a href="{% url 'ushtar_update' pk=q.pk %}" class="btn btn-warning btn-sm">Ndrysho</a></td>

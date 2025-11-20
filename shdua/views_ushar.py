@@ -12,9 +12,12 @@ def flags_helper(pk):
     try:
         ushtari = Ushtari.objects.get(pk=pk)
     except Ushtari.DoesNotExist:
-        return False, False, False, False, False, False, 0, 0, 0
+        return False, False, False, False, False, False, False, False, False, 0, 0, 0
 
-    kryer = False
+    pa_kryer = False
+    kryer_1 = False
+    kryer_2 = False
+    kryer_3 = False
     paguar = False
     pa_afte = False
     periudha_1 = False
@@ -28,13 +31,19 @@ def flags_helper(pk):
     if ushtari.nr_act_paguar and ushtari.date_of_act_paguar:
         paguar = True
 
+    if (not ushtari.shdua_start_date_1 or not ushtari.shdua_finish_date_1) \
+       and (not ushtari.nr_act_paguar or not ushtari.date_of_act_paguar) \
+       and (not ushtari.epicrize or not ushtari.nr_act_paguar):
+        pa_kryer = True
+        
+
     if  ushtari.shdua_start_date_1 and ushtari.shdua_finish_date_1 \
         and ushtari.shdua_start_date_1 <= ushtari.shdua_finish_date_1:
         dite_te_kryera_1 = (ushtari.shdua_finish_date_1 - ushtari.shdua_start_date_1).days + 1
         periudha_1 = True
         print(f"DEBUG: periudha_e_pare {dite_te_kryera_1} ditë")
         if dite_te_kryera_1 >= 350:
-            kryer = True
+            kryer_1 = True
 
             
     if periudha_1 and (ushtari.shdua_start_date_2 and ushtari.shdua_finish_date_2) \
@@ -43,7 +52,7 @@ def flags_helper(pk):
         periudha_2 = True
         print(f"DEBUG: periudha_e_dyte {dite_te_kryera_2} ditë")
         if dite_te_kryera_1 + dite_te_kryera_2 >= 350:
-            kryer = True
+            kryer_2 = True
 
 
     if periudha_2 and (ushtari.shdua_start_date_3 and ushtari.shdua_finish_date_3) \
@@ -52,13 +61,14 @@ def flags_helper(pk):
         periudha_3 = True
         print(f"DEBUG: periudha_e_trete {dite_te_kryera_3} ditë")
         if dite_te_kryera_1 + dite_te_kryera_2 + dite_te_kryera_3 >= 350:
-            kryer = True
+            kryer_3 = True
 
-    if ushtari.physical_exam == 'pa_afte':
-        pa_afte = True
+    if ushtari.physical_exam == 'pa_afte' and ushtari.nr_act_physical_exam and ushtari.date_of_act_physical_exam \
+        and ushtari.epicrize:
+            pa_afte = True
 
 
-    return kryer, paguar, pa_afte, periudha_1, periudha_2, periudha_3, dite_te_kryera_1, dite_te_kryera_2, dite_te_kryera_3
+    return pa_kryer, kryer_1, kryer_2, kryer_3, paguar, pa_afte, periudha_1, periudha_2, periudha_3, dite_te_kryera_1, dite_te_kryera_2, dite_te_kryera_3
 
 
 def ushtar_create(request):
@@ -150,9 +160,12 @@ def ushtar_retrieve(request, pk):
     obj = get_object_or_404(Ushtari, pk=pk)
     titullari_aktiv = Titullari.objects.filter(is_active=True).first()
 
-    kryer, paguar, pa_afte, periudha_1, periudha_2, periudha_3, dite_te_kryera_1, dite_te_kryera_2, dite_te_kryera_3 = flags_helper(obj.pk)
+    pa_kryer, kryer_1, kryer_2, kryer_3, paguar, pa_afte, periudha_1, periudha_2, periudha_3, dite_te_kryera_1, dite_te_kryera_2, dite_te_kryera_3 = flags_helper(obj.pk)
 
-    kryer = kryer
+    pa_kryer = pa_kryer
+    kryer_1 = kryer_1
+    kryer_2 = kryer_2
+    kryer_3 = kryer_3
     paguar = paguar
     pa_afte = pa_afte
     periudha_1 = periudha_1
@@ -166,7 +179,11 @@ def ushtar_retrieve(request, pk):
     context = {
         'titullari_aktiv': titullari_aktiv,
         'obj': obj, 
-        'kryer': kryer, 
+
+        'pa_kryer': pa_kryer, 
+        'kryer_1': kryer_1, 
+        'kryer_2': kryer_2, 
+        'kryer_3': kryer_3, 
         'pa_afte': pa_afte,
         'paguar': paguar,
         'periudha_1': periudha_1,
@@ -185,9 +202,12 @@ def ushtar_retrieve(request, pk):
 def vertetimi_pdf(request, pk):
     obj = get_object_or_404(Ushtari, pk=pk)
     titullari_aktiv = Titullari.objects.filter(is_active=True).first()
-    kryer, paguar, pa_afte, periudha_1, periudha_2, periudha_3, dite_te_kryera_1, dite_te_kryera_2, dite_te_kryera_3 = flags_helper(obj.pk)
+    pa_kryer, kryer_1, kryer_2, kryer_3, paguar, pa_afte, periudha_1, periudha_2, periudha_3, dite_te_kryera_1, dite_te_kryera_2, dite_te_kryera_3 = flags_helper(obj.pk)
 
-    kryer = kryer
+    pa_kryer = pa_kryer
+    kryer_1 = kryer_1
+    kryer_2 = kryer_2
+    kryer_3 = kryer_3
     paguar = paguar
     pa_afte = pa_afte
     periudha_1 = periudha_1
@@ -206,9 +226,12 @@ def vertetimi_pdf(request, pk):
         'koka_e_shkreses': koka_shkrese_url,
         'titullari_aktiv': titullari_aktiv,
         
-        'kryer': kryer, 
-        'paguar_pjeserisht': paguar_pjeserisht,
+        'pa_kryer': pa_kryer, 
+        'kryer_1': kryer_1, 
+        'kryer_2': kryer_2, 
+        'kryer_3': kryer_3, 
         'paguar': paguar,
+        'pa_afte': pa_afte,
         'periudha_1': periudha_1,
         'periudha_2': periudha_2,
         'periudha_3': periudha_3,

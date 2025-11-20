@@ -1,4 +1,4 @@
 git remote -v
 git add .
-git commit -m "Me CSS jo me bootstrap"
+git commit -m "Me pdf"
 git push origin main
