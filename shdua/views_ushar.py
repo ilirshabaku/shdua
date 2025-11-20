@@ -16,7 +16,7 @@ def flags_helper(pk):
 
     kryer = False
     paguar = False
-    paguar_pjeserisht = False
+    pa_afte = False
     periudha_1 = False
     periudha_2 = False
     periudha_3 = False
@@ -54,7 +54,11 @@ def flags_helper(pk):
         if dite_te_kryera_1 + dite_te_kryera_2 + dite_te_kryera_3 >= 350:
             kryer = True
 
-    return kryer, paguar, paguar_pjeserisht, periudha_1, periudha_2, periudha_3, dite_te_kryera_1, dite_te_kryera_2, dite_te_kryera_3
+    if ushtari.physical_exam == 'pa_afte':
+        pa_afte = True
+
+
+    return kryer, paguar, pa_afte, periudha_1, periudha_2, periudha_3, dite_te_kryera_1, dite_te_kryera_2, dite_te_kryera_3
 
 
 def ushtar_create(request):
@@ -146,11 +150,11 @@ def ushtar_retrieve(request, pk):
     obj = get_object_or_404(Ushtari, pk=pk)
     titullari_aktiv = Titullari.objects.filter(is_active=True).first()
 
-    kryer, paguar, paguar_pjeserisht, periudha_1, periudha_2, periudha_3, dite_te_kryera_1, dite_te_kryera_2, dite_te_kryera_3 = flags_helper(obj.pk)
+    kryer, paguar, pa_afte, periudha_1, periudha_2, periudha_3, dite_te_kryera_1, dite_te_kryera_2, dite_te_kryera_3 = flags_helper(obj.pk)
 
     kryer = kryer
     paguar = paguar
-    paguar_pjeserisht = paguar_pjeserisht
+    pa_afte = pa_afte
     periudha_1 = periudha_1
     periudha_2 = periudha_2
     periudha_3 = periudha_3
@@ -163,7 +167,7 @@ def ushtar_retrieve(request, pk):
         'titullari_aktiv': titullari_aktiv,
         'obj': obj, 
         'kryer': kryer, 
-        'paguar_pjeserisht': paguar_pjeserisht,
+        'pa_afte': pa_afte,
         'paguar': paguar,
         'periudha_1': periudha_1,
         'periudha_2': periudha_2,
@@ -181,11 +185,11 @@ def ushtar_retrieve(request, pk):
 def vertetimi_pdf(request, pk):
     obj = get_object_or_404(Ushtari, pk=pk)
     titullari_aktiv = Titullari.objects.filter(is_active=True).first()
-    kryer, paguar, paguar_pjeserisht, periudha_1, periudha_2, periudha_3, dite_te_kryera_1, dite_te_kryera_2, dite_te_kryera_3 = flags_helper(obj.pk)
+    kryer, paguar, pa_afte, periudha_1, periudha_2, periudha_3, dite_te_kryera_1, dite_te_kryera_2, dite_te_kryera_3 = flags_helper(obj.pk)
 
     kryer = kryer
     paguar = paguar
-    paguar_pjeserisht = paguar_pjeserisht
+    pa_afte = pa_afte
     periudha_1 = periudha_1
     periudha_2 = periudha_2
     periudha_3 = periudha_3

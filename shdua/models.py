@@ -1,7 +1,6 @@
 from django.db import models
 
 PHYSIC_EXAM_CHOICES = [ 
-        ('afte', 'I aftë'),
         ('pa_afte', 'I paaftë'),
     ]
 
@@ -102,6 +101,7 @@ SPECIALITETI_CHOICES = [
     ('97', '97- Të pastërvitur'),
     ('98', '98- Me veçori shërbimi'),
 ]
+
 PO_JO_CHOICES = [
     ('----', '----'),
     ('Po', 'Po'),
