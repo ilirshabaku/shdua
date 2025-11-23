@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-)sw_6y*n)9=8zzt!$mz(9uz^qqx6*ir9ob&#ovkz*xl-q%eemh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://ilirshabaku.pythonanywhere.com', '127.0.0.1', '192.168.18.111', 'shdua.qpr']
 
 
 # Application definition
@@ -83,6 +83,16 @@ DATABASES = {
         'PORT': '3306',
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'ilirshabaku$shdua', # database name
+#         'USER': 'admin', 
+#         'PASSWORD': 'admin',
+#         'HOST': 'ilirshabaku.mysql.pythonanywhere-services.com',
+#         'PORT': '3306',
+#     }
+# }
 
 
 # Password validation
@@ -131,3 +141,8 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+DATE_INPUT_FORMATS = ['%d.%m.%Y']
+DATE_FORMAT = 'd.m.Y'
+

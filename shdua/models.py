@@ -121,7 +121,7 @@ DATA_LIGJI_CHOICES = [
 ]
 
 class Ushtari(models.Model):
-    id = models.AutoField(primary_key=True, verbose_name='Primary key (int)')
+
     name = models.CharField(max_length=50, null=False, blank=False,  default= '', verbose_name='Emri')
     father_name = models.CharField(max_length=50, null=False, blank=False, default= '', verbose_name='Atësia')
     family_name = models.CharField(max_length=50, null=False, blank=False, default= '', verbose_name='Mbimri')
@@ -148,6 +148,7 @@ class Ushtari(models.Model):
     nr_of_law_paguar = models.CharField(max_length=30, null=True, blank=True, choices=NR_LIGJI_CHOICES,  default= '', verbose_name='Numri i ligjit')
     date_of_law_paguar = models.CharField(max_length=30, null=True, blank=True, choices=DATA_LIGJI_CHOICES, default= '', verbose_name='Data e ligjit')
     notes = models.TextField(blank=True, null=True, verbose_name='Shënime')
+    date_created = models.DateField(auto_now_add=True, null=True)
 
 
     def __str__(self):
@@ -165,3 +166,14 @@ class Titullari(models.Model):
     
     def __str__(self):
         return f'{self.funksioni} {self.grada} {self.emri} {self.mbiemri}'
+    
+
+
+class Firmat(models.Model):
+    hartoi = models.CharField(max_length=50, null=False, blank=False, verbose_name='Konceptoi')
+    kontrolloi = models.CharField(max_length=50, null=False, blank=False, verbose_name='Pranoi')
+    miratoi = models.CharField(max_length=50, null=False, blank=False, verbose_name='Miratoi')
+    is_active = models.BooleanField(default=False, verbose_name="Firmëtarët aktiv")
+
+    def __str__(self):
+        return f'{self.hartoi} {self.kontrolloi} {self.miratoi}'

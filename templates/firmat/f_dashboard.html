@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="sq">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Zgjidh firmëtarët</title>
+
+    <!-- Custom CSS (pa Bootstrap) -->
+    <link rel="stylesheet" href="{% static 'css/titullari/t_create.css' %}">
+    <link rel="stylesheet" href="{% static 'css/titullari/t_dashboard.css' %}">
+</head>
+
+<body class="bg-secondary text-white p-4 rounded-3">
+    <main class="container py-4">
+
+        <div class="d-flex justify-content-between align-items-start flex-wrap">
+
+            <!-- KOLUMNA E MAJTË: Kthehu + forma e zgjedhjes së bllokut -->
+            <div class="firmat-left">
+
+                <!-- Butoni Kthehu -->
+                <div class="mb-3">
+                    <a href="{% url 'ushtar_list' %}"
+                       class="btn btn-info btn-lg px-4 py-1 d-inline-flex align-items-center gap-2 rounded-3 shadow-sm btn-wide">
+                        &larr; Kthehu
+                    </a>
+                </div>
+
+                <!-- Info për bllokun aktual (nëse ka) -->
+                {% if firmetaret_aktiv %}
+                    <div class="mb-3" style="color: black;">
+                        <strong>Firmëtarët aktualë:</strong><br>
+                        Konceptoi: {{ firmetaret_aktiv.hartoi }}<br>
+                        Pranoi: {{ firmetaret_aktiv.kontrolloi }}<br>
+                        Miratoi: {{ firmetaret_aktiv.miratoi }}
+                    </div>
+                {% endif %}
+
+                <!-- Forma për të zgjedhur bllokun e ri të firmave -->
+                <form method="post" class="firmat-form">
+                    {% csrf_token %}
+
+                    <div class="mb-3" style="margin-top: 1rem;">
+                        <label for="firma_select"
+                               style="display:block; font-weight:bold; margin-bottom:4px; color:black;">
+                            Zgjidh bllokun e firmave
+                        </label>
+
+                        <select id="firma_select"
+                                name="firma_select"
+                                class="form-select"
+                                style="width: 300px; padding: 6px 8px;">
+                            <option value="">— Zgjidh një rresht —</option>
+                            {% for f in firmat_list %}
+                                <option value="{{ f.id }}"
+                                    {% if firmetaret_aktiv and firmetaret_aktiv.id == f.id %}selected{% endif %}>
+                                    {{ f.hartoi }} | {{ f.kontrolloi }} | {{ f.miratoi }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-info btn-wide">
+                        Ruaj firmëtarët aktivë
+                    </button>
+                </form>
+            </div>
+
+            <!-- KOLUMNA E DJATHTË: + Shto firmëtarë -->
+            <div class="firmat-right ms-auto">
+                <a href="{% url 'firmat_create' %}"
+                   class="btn btn-info btn-lg px-4 py-1 d-inline-flex justify-content-center align-items-center rounded-3 shadow-sm btn-wide">
+                    + Shto firmëtarë
+                </a>
+            </div>
+
+        </div>
+
+    </main>
+</body>
+</html>

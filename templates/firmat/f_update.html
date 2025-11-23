@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="sq">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ndrysho titullarin</title>
+
+  <!-- Your custom CSS instead of Bootstrap -->
+  <link rel="stylesheet" href="{% static 'css/titullari/t_create.css' %}">
+  <link rel="stylesheet" href="{% static 'css/titullari/t_update.css' %}">
+</head>
+<body class="bg-secondary text-white p-4 rounded-3">
+  <main class="container py-4">
+    <h1>Ndrysho të dhënat e titullarit</h1>
+
+    <form method="post" action="{% url 'titullari_update' pk=obj.pk %}">
+      {% csrf_token %}
+      {{ form.as_p }}
+
+      <button type="submit" class="btn btn-primary">
+        Ruaj
+      </button>
+    </form>
+  </main>
+</body>
+</html>

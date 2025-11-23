@@ -1,62 +1,94 @@
+/* ========== 1) PAGE SETUP FOR WEASYPRINT ========== */
+
 @page {
     size: A4;
-    margin: 0 0 4cm 0;
-    white-space: pre;   /* <-- REQUIRED so \A becomes a real line break */
-
-    @bottom-center {
-        content: '_______________________________________________________________________________________\A'
-                 'Adresa: Rr. "Kongresi i Manastirit", Garnizoni Skënderbej, Tiranë                    '
-                 "Tel: 510-1036            "
-                 '   Faqe ' counter(page);
-        font-size: 10pt;
-        font-family: "Times New Roman", serif;
-        text-align: center;
-    }
+    margin: 0;  /* we control visual margins via body.container padding */
 }
 
+/* ========== 2) BASE HTML LAYOUT (SCREEN + PDF) ========== */
 
-
-
-
-
-html, body {
+html,
+body {
     margin: 0;
     padding: 0;
-    height: 100%;
 }
 
-/* A4 page = whole body */
+/* A4 page container */
 body.container {
-    width: 100%;
-    height: 100%;
+    width: 21cm;
+    height: 29.7cm;
     margin: 0 auto;
     background: #ffffff;
-    box-sizing: border-box;
 
-    /* SAME margin on all sides for the text box */
+    /* inner "margins" of the page */
     padding-top: 2.5cm;
-    padding-left: 2.5cm;
     padding-right: 2.5cm;
-    padding-bottom: 2.5cm;      /* was 3.5cm */
+    padding-bottom: 2.5cm;
+    padding-left: 2.5cm;
 
-    border: 1px solid #000;
-    position: relative;         /* anchor for footer */
+    box-sizing: border-box;
+    border: 1px solid #000;   /* optional, for debug */
+
+    position: relative;       /* anchor for the absolute footer */
 }
 
+#no-rap {white-space: nowrap;}
+
+/* Titullari block in the main content */
 .titullari {
     text-align: center;
 }
 
-/* Footer glued to the bottom margin of the A4 sheet */
-footer {
+/* ========== 3) FOOTER (SCREEN + PDF) ========== */
+
+/* Footer pinned at bottom of the A4 container */
+footer.site-footer {
     font-size: 10pt;
-    text-align: center;
 
     position: absolute;
-    left: 2.5cm;                /* align with text box */
-    right: 2.5cm;
-    bottom: 2.5cm;              /* EXACTLY at bottom margin of the A4 */
+    left: 2.5cm;        /* align with left text margin */
+    bottom: 1.5cm;      /* 1.5 cm from the bottom edge of the page */
+
+    width: 16cm;        /* EXACTLY the text-box width: 21 - 2.5 - 2.5 */
+
+    box-sizing: border-box;
 }
+
+/* Inner layout of the footer */
+footer.site-footer .footer-inner {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* "Konceptoi / Pranoi / Miratoi" block, aligned in 2 columns */
+.firmetaret {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: 20px;
+    row-gap: 4px;
+
+    width: 100%;
+    box-sizing: border-box;
+
+    margin-bottom: 0.5cm;   /* exactly 0.5 cm above the footer line */
+}
+
+/* horizontal line */
+.footer-line {
+    border-top: 1px solid #000;
+}
+
+/* bottom row: address / tel / page, spaced across */
+.footer-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+/* ========== 4) HIDE ONLY “Shkarko PDF” ON PRINT ========== */
 
 @media print {
     .no-pdf {

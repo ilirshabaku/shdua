@@ -102,7 +102,7 @@
                 ---------------------------------------------
             </div> -->
             <div class="no-pdf">
-                <a href="{% url 'pdf' pk=obj.pk %}"
+                <a href="{% url 'pdf_pa_kosdakt' pk=obj.pk %}"
                     class="btn btn-primary btn-lg px-4 py-1 d-inline-flex align-items-center gap-2 rounded-3 shadow-sm align-self-start"
                     style="min-width: 180px; ">
                    Shkarko PDF
@@ -114,29 +114,26 @@
                 <span>
                     <strong style="text-transform: uppercase">{{ titullari_aktiv.funksioni }}</strong> 
                     <br>
-                    <strong style="text-transform: capitalize">{{ titullari_aktiv.grada }} {{ titullari_aktiv.emri }} {{ titullari_aktiv.mbiemri }}</strong>
+                    <strong style="text-transform: capitalize">
+                        {{ titullari_aktiv.grada }} {{ titullari_aktiv.emri }} {{ titullari_aktiv.mbiemri }}
+                    </strong>
                 </span>
             </div>
-            <p></p>
 
         </main>
 
-        <footer class="no-pdf">
-            <p>
-                <!-- Vijë e drejtë -->
-                <span>__________________________________________________________________________________________</span>
-                <br>
+        <footer class="site-footer">
+            <div class="footer-inner">
+                <!-- Vija + rreshti me adresë/telefon/faqe -->
+                <div class="footer-line"></div>
 
-                <!-- Rreshti me adresë / tel / faqe në një rresht -->
-                <span style="display: flex; justify-content: space-between; padding-left: 2.5cm; padding-right: 2.5cm;">
-                    <span>Adresa: Rr. Kongresi i Manastirit, Garnizoni Skënderbej, Tiranë</span>
+                <div class="footer-meta">
+                    <span>Adresa: Rr. "Kongresi i Manastirit", Garnizoni Skënderbej, Tiranë</span>
                     <span>Tel: 510-1036</span>
                     <span>Faqe 1</span>
-                </span>
-            </p>
+                </div>
+            </div>
         </footer>
-
-
     </body>
 </html>
 

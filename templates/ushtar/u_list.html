@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SHDUA</title>
+    <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/png">
     <link rel="stylesheet" href="{% static 'css/ushtar/u_list.css' %}">
 </head>
 <body class="bg-secondary text-white p-4 rounded-3">
@@ -36,7 +37,7 @@
                            placeholder="Shenja personale" value="{{ id_search }}">
                 </div>
 
-                <div class="text-white">
+                <div class="text-white" style="margin-top: 1.9rem;">
                     <button type="submit" class="btn btn-primary me-2">🔍 Kërko</button>
                     <a href="{% url 'ushtar_list' %}" class="btn btn-secondary">❌ Pastro kërkimin</a>
                 </div>
@@ -45,32 +46,42 @@
             <!-- RIGHT: Titullari dhe + Shto ushtar -->
             <div class="titullari-block; justify-content: end;">
                 <a href="{% url 'titullari_dashboard' %}"
-                   class="btn btn-info btn-lg px-4 py-1 d-inline-flex justify-content-center align-items-center rounded-3 shadow-sm align-self-start btn-titullari btn-wide">
-                    Titullari
+                   class="btn btn-info btn-lg px-4 py-1 d-inline-flex justify-content-center align-items-center rounded-3 shadow-sm align-self-start btn-titullari btn-wide" style=" width: 300px; height: 38px; ">
+                   Titullari
                 </a>
-                <br><br>
+                <br>
                 <span style="color: black; text-align: end;">
-                    Titullari aktual i zgjedhur për shkresat: <br>
-                    <strong>
-                        {{ titullari_aktiv.funksioni }}
-                        {{ titullari_aktiv.grada }}
-                        {{ titullari_aktiv.emri }}
-                        {{ titullari_aktiv.mbiemri }}
-                    </strong>
+                    {{ titullari_aktiv.funksioni }}
+                    {{ titullari_aktiv.grada }}
+                    {{ titullari_aktiv.emri }}
+                    {{ titullari_aktiv.mbiemri }}
                 </span>
-                <br><br><div></div><br style="margin-top: 12px;">
+                <br><br>
+                <a href="{% url 'firmat_dashboard' %}"
+                   class="btn btn-info btn-lg px-4 py-1 d-inline-flex justify-content-center align-items-center rounded-3 shadow-sm align-self-start btn-titullari btn-wide" style=" width: 300px; height: 38px; ">
+                   Blloku i firmave
+                </a>
+            
+                <br>
+                <span style="color: black;">
+                    {{ firmetaret_aktiv.hartoi }} <br>
+                    {{ firmetaret_aktiv.kontrolloi }} <br>
+                    {{ firmetaret_aktiv.miratoi }}<br>
+                </span>
+
                 <a href="{% url 'ushtar_create' %}"
-                   class="btn btn-primary btn-lg px-4 py-1 d-inline-flex align-items-center gap-2 rounded-3 shadow-sm align-self-start btn-wide"
-                   style="margin-top: 1.5rem;">
+                    class="btn btn-primary me-2"
+                    style="margin-top: 1.5rem; width: 300px;">
                     + Shto ushtar
                 </a>
             </div>
         </div>
 
         <!-- Numri i rezultateve -->
-        <div>
-            <p class="mb-2">{{ page_obj.paginator.count }} rezultate</p>
-        </div>
+
+            <p class="mb-2" style="color: black;">{{ page_obj.paginator.count }} rezultate</p>
+
+
         
         <!-- Tabela -->
         <div class="table-responsive">
@@ -83,30 +94,33 @@
                         <th>Datëlindja</th>
                         <th>Vendlindja</th>
                         <th>Shenja personale</th>
-                        <th>Shiko</th>
                         <th>Ndrysho</th>
                         <th>Fshi</th>
                     </tr>
                 </thead>
-                <tbody>
-                    {% for q in qs %}
-                        <tr>
-                            <td>{{ q.name }}</td>
-                            <td>{{ q.father_name }}</td>
-                            <td>{{ q.family_name }}</td>
-                            <td>{{ q.dob|date:"d.m.Y" }}</td>
-                            <td>{{ q.pob }}</td>
-                            <td>{{ q.personal_sign }}</td>
-                            <td><a href="{% url 'ushtar_retrieve' pk=q.pk %}" class="btn btn-info btn-sm">Shiko</a></td>
-                            <td><a href="{% url 'ushtar_update' pk=q.pk %}" class="btn btn-warning btn-sm">Ndrysho</a></td>
-                            <td><a href="{% url 'ushtar_delete' pk=q.pk %}" class="btn btn-danger btn-sm">Fshi</a></td>
-                        </tr>
-                    {% empty %}
-                        <tr>
-                            <td colspan="9" class="text-center text-muted py-4">Asnjë rezultat.</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
+                {% if has_search %}
+                    {% if page_obj %}
+                        <tbody>
+                            {% for q in page_obj %}
+                                <tr>
+                                    <td><a href="{% url 'ushtar_retrieve' pk=q.pk %}">{{ q.name }}</a></td>
+                                    <td><a href="{% url 'ushtar_retrieve' pk=q.pk %}">{{ q.father_name }}</a></td>
+                                    <td><a href="{% url 'ushtar_retrieve' pk=q.pk %}">{{ q.family_name }}</a></td>
+                                    <td>{{ q.dob|date:"d.m.Y" }}</td>
+                                    <td>{{ q.pob }}</td>
+                                    <td>{{ q.personal_sign }}</td>
+                                    <td><a href="{% url 'ushtar_update' pk=q.pk %}" class="btn btn-warning btn-sm">Ndrysho</a></td>
+                                    <td><a href="{% url 'ushtar_delete' pk=q.pk %}" class="btn btn-danger btn-sm">Fshi</a></td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="9" class="text-center text-muted py-4">Asnjë rezultat.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    {% endif %}
+
+                {% endif %}
             </table>
         </div>
 

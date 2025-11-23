@@ -1,34 +1,89 @@
-html, body {
+/* ========== 1) PAGE SETUP FOR WEASYPRINT ========== */
+
+@page {
+    size: A4;
+    margin: 0;   /* Përdorim body.container për "margjinat vizuale" */
+}
+
+/* Nëse në të ardhmen do të duash përsëri footer automatik @bottom-center,
+   mund ta shtojmë këtu, por TANI e heqim që të mos conflictojë me <footer>. */
+
+
+/* ========== 2) BASE HTML LAYOUT (SCREEN + PDF) ========== */
+
+html,
+body {
     margin: 0;
     padding: 0;
 }
 
-/* A4 page container applied to <body class="container"> */
+/* A4 page container */
 body.container {
     width: 21cm;
     height: 29.7cm;
     margin: 0 auto;
     background: #ffffff;
-    padding-left: 2.5cm;
-    padding-right: 2.5cm;
+
+    /* inner "margins" of the page */
     padding-top: 2.5cm;
-    padding-bottom: 3.5cm;   /* space reserved visually if you want */
+    padding-right: 2.5cm;
+    padding-bottom: 2.5cm;
+    padding-left: 2.5cm;
+
     box-sizing: border-box;
-    border: 1px solid #000;
-    position: relative;      /* ❶ anchor for the absolute footer */
+    border: 1px solid #000;   /* vetëm vizual, opsionale */
+
+    position: relative;       /* anchor for the absolute footer */
 }
 
+/* Titullari block in the main content */
 .titullari {
     text-align: center;
 }
 
-/* Footer pinned at bottom of the container */
-footer {
-    font-size: 10pt;
-    text-align: center;
+/* ========== 3) FOOTER (SCREEN + PDF) ========== */
 
-    position: absolute;      /* ❷ take it out of flow & pin it */
-    left: 0;
-    right: 0;                /* make it span full width */
-    bottom: 1.5cm;
+/* Footer pinned at bottom of the A4 container */
+footer.site-footer {
+    font-size: 10pt;
+
+    position: absolute;
+    left: 2.5cm;     /* align with left text margin */
+    right: 2.5cm;    /* align with right text margin */
+    bottom: 1.5cm;   /* 1.5 cm from the bottom edge, si te "fake" CSS */
+}
+
+/* Inner layout of the footer */
+footer.site-footer .footer-inner {
+    display: flex;
+    flex-direction: column;
+}
+
+/* "Konceptoi / Pranoi / Miratoi" block, aligned in 2 columns */
+.firmetaret {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: 20px;
+    row-gap: 4px;
+    margin-bottom: 0.5cm;  /* 0.5 cm mbi .footer-line */
+}
+
+/* horizontal line */
+.footer-line {
+    border-top: 1px solid #000;
+}
+
+/* bottom row: address / tel / page, spaced across */
+.footer-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+/* ========== 4) HIDE ONLY “Shkarko PDF” ON PRINT ========== */
+
+@media print {
+    .no-pdf {
+        display: none !important;
+    }
 }

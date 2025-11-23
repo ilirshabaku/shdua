@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.templatetags.static import static
 from .forms import UshtariForm
-from .models import Ushtari, Titullari
+from .models import Ushtari, Titullari, Firmat
 from weasyprint import HTML, CSS
 from django.core.paginator import Paginator
 
@@ -84,14 +84,24 @@ def ushtar_create(request):
     return render(request, template_name, context)
 
 def ushar_list (request):
-    titullari_aktiv = Titullari.objects.filter(is_active=True).first()
+
     qs = Ushtari.objects.all()
+
+    firmetaret_aktiv = Firmat.objects.filter(is_active=True).first()
+    print('DEBUG: firmetaret aktiv:', Firmat.objects.first().hartoi)
+    titullari_aktiv = Titullari.objects.filter(is_active=True).first()
 
     name_search = (request.GET.get('name_search') or '').strip()
     father_name_search = (request.GET.get('father_name_search') or '').strip()
     family_name_search = (request.GET.get('family_name_search') or '').strip()
     id_search = (request.GET.get('id_search') or '').strip()
 
+    has_search = any([
+        name_search,
+        father_name_search,
+        family_name_search,
+        id_search,
+    ])
 
     if name_search:
         qs = qs.filter(name__icontains=name_search)
@@ -113,7 +123,9 @@ def ushar_list (request):
     context = {
         'qs': qs,
         'titullari_aktiv': titullari_aktiv,
+        'firmetaret_aktiv': firmetaret_aktiv, 
         'name_search': name_search, 
+        'has_search': has_search,
         'father_name_search': father_name_search, 
         'family_name_search': family_name_search,
         'id_search': id_search,
@@ -159,6 +171,7 @@ def ushtar_retrieve(request, pk):
 
     obj = get_object_or_404(Ushtari, pk=pk)
     titullari_aktiv = Titullari.objects.filter(is_active=True).first()
+    firmetaret = Firmat.objects.filter(is_active=True).first()
 
     pa_kryer, kryer_1, kryer_2, kryer_3, paguar, pa_afte, periudha_1, periudha_2, periudha_3, dite_te_kryera_1, dite_te_kryera_2, dite_te_kryera_3 = flags_helper(obj.pk)
 
@@ -179,6 +192,7 @@ def ushtar_retrieve(request, pk):
     context = {
         'titullari_aktiv': titullari_aktiv,
         'obj': obj, 
+        'firmetaret': firmetaret,
 
         'pa_kryer': pa_kryer, 
         'kryer_1': kryer_1, 
@@ -194,14 +208,15 @@ def ushtar_retrieve(request, pk):
         'dite_te_kryera_3': dite_te_kryera_3,
         }
 
-    template_name = 'ushtar/u_retrieve.html'
+    template_name = 'ushtar/u_retrieve_me_kosdakt.html'
 
     return render(request, template_name, context)
 
 
-def vertetimi_pdf(request, pk):
+def pdf_me_kosdakt(request, pk):
     obj = get_object_or_404(Ushtari, pk=pk)
     titullari_aktiv = Titullari.objects.filter(is_active=True).first()
+    firmetaret = Firmat.objects.filter(is_active=True).first()
     pa_kryer, kryer_1, kryer_2, kryer_3, paguar, pa_afte, periudha_1, periudha_2, periudha_3, dite_te_kryera_1, dite_te_kryera_2, dite_te_kryera_3 = flags_helper(obj.pk)
 
     pa_kryer = pa_kryer
@@ -225,6 +240,7 @@ def vertetimi_pdf(request, pk):
         'obj': obj,
         'koka_e_shkreses': koka_shkrese_url,
         'titullari_aktiv': titullari_aktiv,
+        'firmetaret': firmetaret,
         
         'pa_kryer': pa_kryer, 
         'kryer_1': kryer_1, 
@@ -240,7 +256,7 @@ def vertetimi_pdf(request, pk):
         'dite_te_kryera_3': dite_te_kryera_3,
     }
 
-    html_string = render_to_string("ushtar/u_retrieve.html", context, request=request)
+    html_string = render_to_string("ushtar/u_retrieve_me_kosdakt.html", context, request=request)
 
     css_url = request.build_absolute_uri(static('css/pdf.css'))
     css = CSS(url=css_url)
@@ -251,7 +267,65 @@ def vertetimi_pdf(request, pk):
     ).write_pdf(stylesheets=[css])
 
     response = HttpResponse(pdf_bytes, content_type="application/pdf")
-    response["Content-Disposition"] = f'attachment; filename=\"ushtar_{pk}.pdf\"'
+    response["Content-Disposition"] = f'inline; filename=\"ushtar_{pk}.pdf\"'
+    return response
+
+
+def pdf_pa_kosdakt(request, pk):
+    obj = get_object_or_404(Ushtari, pk=pk)
+    titullari_aktiv = Titullari.objects.filter(is_active=True).first()
+    firmetaret = Firmat.objects.filter(is_active=True).first()
+    pa_kryer, kryer_1, kryer_2, kryer_3, paguar, pa_afte, periudha_1, periudha_2, periudha_3, dite_te_kryera_1, dite_te_kryera_2, dite_te_kryera_3 = flags_helper(obj.pk)
+
+    pa_kryer = pa_kryer
+    kryer_1 = kryer_1
+    kryer_2 = kryer_2
+    kryer_3 = kryer_3
+    paguar = paguar
+    pa_afte = pa_afte
+    periudha_1 = periudha_1
+    periudha_2 = periudha_2
+    periudha_3 = periudha_3
+    dite_te_kryera_1 = dite_te_kryera_1
+    dite_te_kryera_2 = dite_te_kryera_2
+    dite_te_kryera_3 = dite_te_kryera_3
+
+    base_url = request.build_absolute_uri('/')
+
+    koka_shkrese_url = request.build_absolute_uri(static('img/koka_e_shkreses.jpg'))
+
+    context = {
+        'obj': obj,
+        'koka_e_shkreses': koka_shkrese_url,
+        'titullari_aktiv': titullari_aktiv,
+        'firmetaret': firmetaret,
+        
+        'pa_kryer': pa_kryer, 
+        'kryer_1': kryer_1, 
+        'kryer_2': kryer_2, 
+        'kryer_3': kryer_3, 
+        'paguar': paguar,
+        'pa_afte': pa_afte,
+        'periudha_1': periudha_1,
+        'periudha_2': periudha_2,
+        'periudha_3': periudha_3,
+        'dite_te_kryera_1': dite_te_kryera_1,
+        'dite_te_kryera_2': dite_te_kryera_2,
+        'dite_te_kryera_3': dite_te_kryera_3,
+    }
+
+    html_string = render_to_string("ushtar/u_retrieve_pa_kosdakt.html", context, request=request)
+
+    css_url = request.build_absolute_uri(static('css/pdf.css'))
+    css = CSS(url=css_url)
+
+    pdf_bytes = HTML(
+        string=html_string,
+        base_url=base_url,
+    ).write_pdf(stylesheets=[css])
+
+    response = HttpResponse(pdf_bytes, content_type="application/pdf")
+    response["Content-Disposition"] = f'inline; filename=\"ushtar_{pk}.pdf\"'
     return response
 
 
