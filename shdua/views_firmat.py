@@ -3,6 +3,12 @@ from .forms import FirmatForm
 from .models import Firmat
 
 
+def firmat_list(request):
+    firmat = Firmat.objects.all()
+    
+    context = {'firmat': firmat}
+    template_name = 'firmat/f_list.html'
+    return render(request, template_name, context)
 
 def firmat_create(request):
     if request.method == 'POST':

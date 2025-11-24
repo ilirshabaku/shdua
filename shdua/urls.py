@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 from django.urls import path
 from .views_ushar import ushtar_create, pdf_me_kosdakt, pdf_pa_kosdakt, ushar_list, ushtar_update, ushtar_delete, ushtar_retrieve
 from .views_titullari import  titullari_dashboard, titullari_list, titullari_create, titullari_update, titullari_delete
-from .views_firmat import firmat_dashboard, firmat_create, firmat_update, firmat_delete
+from .views_firmat import firmat_dashboard, firmat_list, firmat_create, firmat_update, firmat_delete
 
 urlpatterns = [
     path('', ushar_list, name='ushtar_list'),
@@ -19,6 +19,7 @@ urlpatterns = [
     path('titullari/<int:pk>/delete/', titullari_delete, name='titullari_delete'),
 
     path('firmat_dashboard/', firmat_dashboard, name='firmat_dashboard'),
+    path('firmat_list/', firmat_list, name='firmat_list'),
     path('firmat_create/', firmat_create, name='firmat_create'),
     path('firmat/<int:pk>/update/', firmat_update, name='firmat_update'),
     path('firmat/<int:pk>/delete/', firmat_delete, name='firmat_delete'),

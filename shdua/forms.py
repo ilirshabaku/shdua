@@ -224,7 +224,6 @@ class UshtariForm(forms.ModelForm):
         return instance
 
 
-
 class TitullariForm(forms.ModelForm):
     class Meta:
         model = Titullari
@@ -236,15 +235,6 @@ class TitullariForm(forms.ModelForm):
                 'mbiemri': forms.TextInput(attrs={'class': 'form-control', 'style': 'width: 220px;'}),
                 
         }
-
-
-class TitullariSelectForm(forms.Form):
-    titullari = forms.ModelChoiceField(
-        queryset=Titullari.objects.all(),
-        label="Zgjidh titullarin aktual",
-        widget=forms.Select(attrs={'class': 'form-select', 'style': 'width: 420px;'})
-    )
-
 
 class FirmatForm(forms.ModelForm):
     class Meta:

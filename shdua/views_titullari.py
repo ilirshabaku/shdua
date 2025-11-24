@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import TitullariForm, TitullariSelectForm
+from .forms import TitullariForm
 from .models import Titullari
 
 
@@ -27,28 +27,34 @@ def titullari_create(request):
     return render(request, template_name, context)
 
 def titullari_dashboard(request):
+    titullaret_list = Titullari.objects.all()
     # Gjejmë titullarin aktual nëse ekziston
     current = Titullari.objects.filter(is_active=True).first()
 
     if request.method == "POST":
-        form = TitullariSelectForm(request.POST)
-        if form.is_valid():
-            selected = form.cleaned_data["titullari"]
+            selected_id = request.POST.get('titullari_select')
+            if selected_id:
+                try:
+                    selected = Titullari.objects.get(pk=selected_id)
+                except Titullari.DoesNotExist:
+                    selected = None
+                else:
+                    # Ç'aktivizojmë të gjithë të tjerët
+                    Titullari.objects.update(is_active=False)
+                    # Aktivizojmë vetëm të zgjedhurin
+                    selected.is_active = True
+                    selected.save()
 
-            # Ç'aktivizojmë të gjithë të tjerët
-            Titullari.objects.update(is_active=False)
+                    # Pasi e zgjodhe, kthehu diku (home, list, etj.)
+                    return redirect("ushtar_list")  # ose 'firmat_list'
 
-            # Aktivizojmë vetëm të zgjedhurin
-            selected.is_active = True
-            selected.save()
 
-            # Pasi e zgjodhe, kthehu diku (home, list, etj.)
-            return redirect("ushtar_list")  # ose 'titullari_list'
-    else:
-        # Kur hapet faqja, si default t'i tregojmë të zgjedhurin aktual (nëse ka)
-        form = TitullariSelectForm(initial={"titullari": current})
-
-    context = {"form": form}
+    context = {
+        "titullaret_list": titullaret_list,
+        'titullari_aktiv': current, 
+        # Ky përdoret për ta mbajtur opsionin të zgjedhur
+        'titullari_select': current.id if current else '', 
+        }
     return render(request, "titullari/t_dashboard.html", context)
 
 def titullari_update(request, pk):

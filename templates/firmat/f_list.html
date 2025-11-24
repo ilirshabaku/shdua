@@ -5,8 +5,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Lista me titullarë</title>
-        <link rel="stylesheet" href="{% static 'css/titullari/t_list.css' %}">
-        <link rel="stylesheet" href="{% static 'css/titullari/t_create.css' %}">
+        <link rel="stylesheet" href="{% static 'css/ushtar/u_list.css' %}">
     </head>
     <body class="bg-secondary text-white p-4 rounded-3">
         <main class="container py-4">
@@ -18,6 +17,23 @@
             </div>
 
             <br><br>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover table-sm align-middle">
+                    <thead class="table-light">
+                        <tr><th>Blloku i firmëtarëve</th><th>Ndrysho</th><th>Fshi</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for f in firmat %}
+                            <tr>
+                                <td>{{ f.hartoi }} ** {{ f.kontrolloi }} ** {{ f.miratoi }}</td>
+                                <td><a href="{% url 'firmat_update' pk=f.pk %}"  class="btn btn-warning btn-sm">Ndrysho</a></td>
+                                <td><a href="{% url 'firmat_delete' pk=f.pk %}"  class="btn btn-danger btn-sm">Fshi</a></td>
+                            </tr>
+                        {% endfor %}
+                        <tr></tr>
+                    </tbody>
+                </table>
+            </div>
 
             <div class="ms-auto">
                 <a href="{% url 'firmat_create' %}"

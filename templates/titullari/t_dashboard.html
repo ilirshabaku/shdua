@@ -11,37 +11,64 @@
         <link rel="stylesheet" href="{% static 'css/titullari/t_dashboard.css' %}">
     </head>
     <body class="bg-secondary text-white p-4 rounded-3">
-        <main class="container py-4">
-            <div class="d-flex">
-                <div>
-                    <div>
-                        <a class="btn btn-info btn-lg px-4 py-1 d-inline-flex align-items-center gap-2 rounded-3 shadow-sm align-self-start btn-wide"
-                           href="{% url 'ushtar_list' %}">
-                            &larr; Kthehu
-                        </a>
-                    </div>
 
-                    <br><br>
+<body class="bg-secondary text-white p-4 rounded-3">
+    <main class="container py-4">
 
-                    <div>
-                        <form method="post">
-                            {% csrf_token %}
-                            {{ form.as_p }}
-                            <button type="submit"
-                                    class="btn btn-info btn-wide">
-                                Ruaj titullarin aktiv
-                            </button>
-                        </form>
-                    </div>
-                </div>
+        <div class="d-flex justify-content-between align-items-start flex-wrap">
 
-                <div class="ms-auto">
-                    <a class="btn btn-info btn-lg px-4 py-1 d-inline-flex justify-content-center align-items-center rounded-3 shadow-sm align-self-start btn-wide"
-                       href="{% url 'titullari_list' %}">
-                        Menaxho listën
+            <!-- Kolona E majtë: Kthehu + forma e zgjedhjes së titullarit -->
+            <div class="firmat-left">
+
+                <!-- Butoni Kthehu -->
+                <div class="mb-3">
+                    <a href="{% url 'ushtar_list' %}"
+                       class="btn btn-info btn-lg px-4 py-1 d-inline-flex align-items-center gap-2 rounded-3 shadow-sm btn-wide">
+                        &larr; Kthehu
                     </a>
                 </div>
+
+
+                <!-- Forma për të zgjedhur bllokun e ri të firmave -->
+                <form method="post" class="firmat-form">
+                    {% csrf_token %}
+
+                    <div class="mb-3" style="margin-top: 1rem;">
+                        <label for="titullari_select"
+                               style="display:block; font-weight:bold; margin-bottom:4px; color:black;">
+                            Zgjidh titullarin
+                        </label>
+
+                        <select id="titullari_select"
+                                name="titullari_select"
+                                class="form-select"
+                                style="width: 300px; padding: 6px 8px;">
+                            <option value="">— Zgjidh një rresht —</option>
+                            {% for f in titullaret_list %}
+                                <option value="{{ f.id }}"
+                                    {% if titullari_aktiv and titullari_aktiv.id == f.id %}selected{% endif %}>
+                                    {{ f.grada }} | {{ f.emri }} | {{ f.mbiemri }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-info btn-wide">
+                        Ruaj titullarin aktiv
+                    </button>
+                </form>
             </div>
-        </main>
+
+            <!-- KOLONA E DJATHTË: + Shto Titullar -->
+            <div class="firmat-right ms-auto">
+                <a href="{% url 'titullari_list' %}"
+                   class="btn btn-info btn-lg px-4 py-1 d-inline-flex justify-content-center align-items-center rounded-3 shadow-sm btn-wide">
+                    Menaxho titullarët
+                </a>
+            </div>
+
+        </div>
+
+    </main>
     </body>
 </html>

@@ -88,8 +88,12 @@ def ushar_list (request):
     qs = Ushtari.objects.all()
 
     firmetaret_aktiv = Firmat.objects.filter(is_active=True).first()
-    print('DEBUG: firmetaret aktiv:', Firmat.objects.first().hartoi)
+
     titullari_aktiv = Titullari.objects.filter(is_active=True).first()
+    if titullari_aktiv:
+        print('DEBUG: titullari aktiv:', titullari_aktiv.emri, ' ', titullari_aktiv.mbiemri)
+    else:
+        print('DEBUG: titullari aktiv: asnjë rresht në drop-listë')
 
     name_search = (request.GET.get('name_search') or '').strip()
     father_name_search = (request.GET.get('father_name_search') or '').strip()
