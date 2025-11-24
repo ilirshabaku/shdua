@@ -83,16 +83,7 @@ DATABASES = {
         'PORT': '3306',
     }
 }
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'ilirshabaku$shdua', # database name
-#         'USER': 'admin', 
-#         'PASSWORD': 'admin',
-#         'HOST': 'ilirshabaku.mysql.pythonanywhere-services.com',
-#         'PORT': '3306',
-#     }
-# }
+
 
 
 # Password validation
