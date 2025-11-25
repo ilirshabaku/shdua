@@ -88,18 +88,28 @@
             <table class="table table-striped table-hover table-sm align-middle">
                 <thead class="table-light">
                     <tr>
-                        <th>Emër</th>
-                        <th>Atësi</th>
-                        <th>Mbiemër</th>
-                        <th>Datëlindja</th>
-                        <th>Vendlindja</th>
-                        <th>Shenja personale</th>
-                        <th>Ndrysho</th>
-                        <th>Fshi</th>
+                        <th style="width: 80px">Emër</th>
+                        <th style="width: 80px">Atësi</th>
+                        <th style="width: 80px">Mbiemër</th>
+                        <th style="width: 80px">Datëlindja</th>
+                        <th style="width: 80px">Vendlindja</th>
+                        <th style="width: 80px">Shenja personale</th>
+                        <th style="width: 80px">Ndrysho</th>
+                        <th style="width: 80px">Fshi</th>
                     </tr>
                 </thead>
                 {% if has_search %}
-                    {% if page_obj %}
+                    {% if no_results %}
+                        <tbody>
+                            <tr>
+                                <td colspan="9" class="text-center text-muted py-4">
+                                    <a href="{% url 'ushtar_retrieve' pk=0 %}?name_search={{ name_search|urlencode }}&father_name_search={{ father_name_search|urlencode }}&family_name_search={{ family_name_search|urlencode }}&id_search={{ id_search|urlencode }}">
+                                        Asnjë rezultat. Kliko këtu për vërtetim informues.
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    {% else %}
                         <tbody>
                             {% for q in page_obj %}
                                 <tr>
@@ -109,40 +119,22 @@
                                     <td>{{ q.dob|date:"d.m.Y" }}</td>
                                     <td>{{ q.pob }}</td>
                                     <td>{{ q.personal_sign }}</td>
-                                    <td><a href="{% url 'ushtar_update' pk=q.pk %}" class="btn btn-warning btn-sm">Ndrysho</a></td>
-                                    <td><a href="{% url 'ushtar_delete' pk=q.pk %}" class="btn btn-danger btn-sm">Fshi</a></td>
-                                </tr>
-                            {% empty %}
-                                <tr>
-                                    <td colspan="9" class="text-center text-muted py-4">Asnjë rezultat.</td>
+                                    <td>
+                                        <a href="{% url 'ushtar_update' pk=q.pk %}" class="btn btn-warning btn-sm">
+                                            Ndrysho
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'ushtar_delete' pk=q.pk %}" class="btn btn-danger btn-sm">
+                                            Fshi
+                                        </a>
+                                    </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                     {% endif %}
-
                 {% endif %}
-            </table>
-        </div>
 
-        <!-- Paginimi (ruan edhe id_search) -->
-        <nav class="d-flex justify-content-between">
-            {% if page_obj.has_previous %}
-                <a class="btn btn-outline-secondary"
-                   href="?name_search={{ name_search }}&father_name_search={{ father_name_search }}&family_name_search={{ family_name_search }}&id_search={{ id_search }}&page={{ page_obj.previous_page_number }}">
-                    ← Më parë
-                </a>
-            {% else %}
-                <span></span>
-            {% endif %}
-
-            <span>Faqja {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
-
-            {% if page_obj.has_next %}
-                <a class="btn btn-outline-secondary"
-                   href="?name_search={{ name_search }}&father_name_search={{ father_name_search }}&family_name_search={{ family_name_search }}&id_search={{ id_search }}&page={{ page_obj.next_page_number }}">
-                    Më pas →
-                </a>
-            {% endif %}
         </nav>
     </main>
 </body>

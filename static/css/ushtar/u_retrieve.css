@@ -1,0 +1,38 @@
+.kthehu-button {
+    /* d-inline-flex */
+    display: inline-flex;
+    align-items: center;
+
+    /* px-4 py-1  (Bootstrap: 0.25rem vertical, 1.5rem horizontal) */
+    padding: 0.25rem 1.5rem;
+
+    /* btn-lg (rough approximation) */
+    font-size: 1.25rem;
+    line-height: 1.5;
+
+    /* btn-info colors */
+    background-color: #0d68f0;
+    border: 1px solid #0dcaf0;
+    color: #ffffff;
+    text-decoration: none;
+    cursor: pointer;
+
+    /* gap-2 */
+    gap: 0.5rem;
+
+    /* rounded-3 (approx.) */
+    border-radius: 0.3rem;
+
+    /* shadow-sm */
+    box-shadow: 0 .125rem .25rem rgba(0, 0, 0, 0.075);
+
+    /* btn-wide: make it a bit wider if you want */
+    min-width: 100px;
+    justify-content: center;
+}
+
+.kthehu-button:hover {
+    background-color: #2076f7;
+    border-color: #25cff2;
+    text-decoration: none;
+}

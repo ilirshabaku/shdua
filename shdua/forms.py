@@ -46,12 +46,14 @@ class UshtariForm(forms.ModelForm):
     district_code = forms.ChoiceField(
         choices=DISTRICT_CODE_CHOICES,
         label='Kodi i rrethit',
+        required=False,
         widget=forms.Select(attrs={'class': 'form-control', 'style': 'width: 220px;'})
     )
 
     suffix_nr = forms.CharField(
         max_length=20,
         label='Mbrapashtesa e kodit',
+        required=False,
         widget=forms.TextInput(attrs={'class': 'form-control', 'style': 'width: 220px;'})
     )
 
@@ -217,7 +219,10 @@ class UshtariForm(forms.ModelForm):
         d_code = self.cleaned_data.get('district_code')
         s_nr = self.cleaned_data.get('suffix_nr')
 
-        instance.personal_sign = f'{d_code}-{s_nr}'
+        if d_code and s_nr:
+            instance.personal_sign = f'{d_code}-{s_nr}'
+        else:
+            instance.personal_sign = '-'
 
         if commit:
             instance.save()

@@ -8,13 +8,10 @@ from weasyprint import HTML, CSS
 from django.core.paginator import Paginator
 
 
-def flags_helper(pk):
-    try:
-        ushtari = Ushtari.objects.get(pk=pk)
-    except Ushtari.DoesNotExist:
-        return False, False, False, False, False, False, False, False, False, 0, 0, 0
+def flags_helper(request, ushtari):
 
     pa_kryer = False
+    me_pretendim = False 
     kryer_1 = False
     kryer_2 = False
     kryer_3 = False
@@ -27,23 +24,32 @@ def flags_helper(pk):
     dite_te_kryera_2 = 0
     dite_te_kryera_3 = 0
 
+    plus = request.GET.get('plus', '').strip()
 
+
+    
     if ushtari.nr_act_paguar and ushtari.date_of_act_paguar:
         paguar = True
 
-    if (not ushtari.shdua_start_date_1 or not ushtari.shdua_finish_date_1) \
-       and (not ushtari.nr_act_paguar or not ushtari.date_of_act_paguar) \
-       and (not ushtari.epicrize or not ushtari.nr_act_paguar):
-        pa_kryer = True
-        
+    s1 = not ushtari.shdua_start_date_1 or not ushtari.shdua_finish_date_1
+    s2 = not ushtari.nr_act_paguar or not ushtari.date_of_act_paguar
+    s3 = not ushtari.epicrize or not ushtari.physical_exam == 'pa_afte'
 
+    if s1 and s2 and s3:
+        pa_kryer = True
+
+
+    pretendim = (plus == 'me_pretendim')
+    if pa_kryer and pretendim:
+        me_pretendim = True # Formulari 2+. E ka shenjen personale por nuk ka periudhe te regjistruar. Shenim: dergo dokumenta verifikimi
+        
     if  ushtari.shdua_start_date_1 and ushtari.shdua_finish_date_1 \
         and ushtari.shdua_start_date_1 <= ushtari.shdua_finish_date_1:
         dite_te_kryera_1 = (ushtari.shdua_finish_date_1 - ushtari.shdua_start_date_1).days + 1
-        periudha_1 = True
+        periudha_1 = True # Validiteti i periudhës
         print(f"DEBUG: periudha_e_pare {dite_te_kryera_1} ditë")
         if dite_te_kryera_1 >= 350:
-            kryer_1 = True
+            kryer_1 = True # Validiteti i kryerjes
 
             
     if periudha_1 and (ushtari.shdua_start_date_2 and ushtari.shdua_finish_date_2) \
@@ -68,7 +74,8 @@ def flags_helper(pk):
             pa_afte = True
 
 
-    return pa_kryer, kryer_1, kryer_2, kryer_3, paguar, pa_afte, periudha_1, periudha_2, periudha_3, dite_te_kryera_1, dite_te_kryera_2, dite_te_kryera_3
+
+    return pa_kryer, me_pretendim, kryer_1, kryer_2, kryer_3, paguar, pa_afte, periudha_1, periudha_2, periudha_3, dite_te_kryera_1, dite_te_kryera_2, dite_te_kryera_3
 
 
 def ushtar_create(request):
@@ -83,17 +90,11 @@ def ushtar_create(request):
     template_name = "ushtar/u_create.html"
     return render(request, template_name, context)
 
-def ushar_list (request):
-
+def ushar_list(request):
     qs = Ushtari.objects.all()
 
     firmetaret_aktiv = Firmat.objects.filter(is_active=True).first()
-
     titullari_aktiv = Titullari.objects.filter(is_active=True).first()
-    if titullari_aktiv:
-        print('DEBUG: titullari aktiv:', titullari_aktiv.emri, ' ', titullari_aktiv.mbiemri)
-    else:
-        print('DEBUG: titullari aktiv: asnjë rresht në drop-listë')
 
     name_search = (request.GET.get('name_search') or '').strip()
     father_name_search = (request.GET.get('father_name_search') or '').strip()
@@ -119,25 +120,30 @@ def ushar_list (request):
     if id_search:
         qs = qs.filter(personal_sign__icontains=id_search)
 
-    qs = qs.order_by('family_name', 'name', 'personal_sign')  
+    qs = qs.order_by('family_name', 'name', 'personal_sign')
 
-    paginator = Paginator(qs, 10)  # 10 per page
+    # 🔹 këtu NUK futim dummy, thjesht shënojmë që nuk ka rezultate
+    no_results = has_search and not qs.exists()
+
+    paginator = Paginator(qs, 10)
     page_obj = paginator.get_page(request.GET.get('page'))
 
     context = {
         'qs': qs,
-        'titullari_aktiv': titullari_aktiv,
-        'firmetaret_aktiv': firmetaret_aktiv, 
-        'name_search': name_search, 
+        'page_obj': page_obj,
+        'no_results': no_results,
         'has_search': has_search,
-        'father_name_search': father_name_search, 
+
+        'titullari_aktiv': titullari_aktiv,
+        'firmetaret_aktiv': firmetaret_aktiv,
+
+        'name_search': name_search,
+        'father_name_search': father_name_search,
         'family_name_search': family_name_search,
         'id_search': id_search,
-        'page_obj': page_obj,
-        }
+    }
 
     template_name = 'ushtar/u_list.html'
-    
     return render(request, template_name, context)
 
 def ushtar_update(request, pk):
@@ -157,7 +163,7 @@ def ushtar_update(request, pk):
 
     template_name = 'ushtar/u_update.html'
     return render(request, template_name, context)
-
+ 
 def ushtar_delete(request, pk):
 
     obj = get_object_or_404(Ushtari, pk=pk)
@@ -172,36 +178,76 @@ def ushtar_delete(request, pk):
     return render(request, template_name, context)
 
 def ushtar_retrieve(request, pk):
+    # --- 1) Lexojmë parametrat e kërkimit nga query string ---
+    name_search = (request.GET.get('name_search') or '').strip()
+    father_name_search = (request.GET.get('father_name_search') or '').strip()
+    family_name_search = (request.GET.get('family_name_search') or '').strip()
+    id_search = (request.GET.get('id_search') or '').strip()
 
-    obj = get_object_or_404(Ushtari, pk=pk)
+    plus = (request.GET.get('plus') or '').strip()
+    no_result = False
+
+    # Sigurohemi që pk të trajtohet si numër (funksionon edhe nëse vjen si string)
+    try:
+        pk_int = int(pk)
+    except (TypeError, ValueError):
+        pk_int = None
+
+    # --- 2) Rast special: "no result" → pk == 0 ---
+    if pk_int == 0:
+        no_result = True
+
+        # Krijojmë një "objekt fiktiv" (nuk ruhet në DB)
+        obj = Ushtari(
+            name=name_search or '—',
+            father_name=father_name_search or '—',
+            family_name=family_name_search or '—',
+            personal_sign=id_search or '—',
+        )
+
+        # Flags bosh – nuk thërrasim flags_helper për dummy
+        pa_kryer = False
+        me_pretendim = False
+        kryer_1 = kryer_2 = kryer_3 = False
+        paguar = False
+        pa_afte = False
+        periudha_1 = periudha_2 = periudha_3 = False
+        dite_te_kryera_1 = dite_te_kryera_2 = dite_te_kryera_3 = 0
+
+    # --- 3) Rast normal: ushtar real nga DB ---
+    else:
+        obj = get_object_or_404(Ushtari, pk=pk)
+
+        (pa_kryer, me_pretendim,
+         kryer_1, kryer_2, kryer_3,
+         paguar, pa_afte,
+         periudha_1, periudha_2, periudha_3,
+         dite_te_kryera_1, dite_te_kryera_2, dite_te_kryera_3) = flags_helper(request, obj)
+
+    # --- 4) Titullari & firmat ---
     titullari_aktiv = Titullari.objects.filter(is_active=True).first()
     firmetaret = Firmat.objects.filter(is_active=True).first()
 
-    pa_kryer, kryer_1, kryer_2, kryer_3, paguar, pa_afte, periudha_1, periudha_2, periudha_3, dite_te_kryera_1, dite_te_kryera_2, dite_te_kryera_3 = flags_helper(obj.pk)
-
-    pa_kryer = pa_kryer
-    kryer_1 = kryer_1
-    kryer_2 = kryer_2
-    kryer_3 = kryer_3
-    paguar = paguar
-    pa_afte = pa_afte
-    periudha_1 = periudha_1
-    periudha_2 = periudha_2
-    periudha_3 = periudha_3
-    dite_te_kryera_1 = dite_te_kryera_1
-    dite_te_kryera_2 = dite_te_kryera_2
-    dite_te_kryera_3 = dite_te_kryera_3
-
-
+    # --- 5) Context për template ---
     context = {
         'titullari_aktiv': titullari_aktiv,
-        'obj': obj, 
         'firmetaret': firmetaret,
+        'obj': obj,
+        'plus': plus,
+        'no_result': no_result,
 
-        'pa_kryer': pa_kryer, 
-        'kryer_1': kryer_1, 
-        'kryer_2': kryer_2, 
-        'kryer_3': kryer_3, 
+        # Të dhënat e kërkimit – për t’u shfaqur te “Të dhënat e kërkimit”
+        'name_search': name_search,
+        'father_name_search': father_name_search,
+        'family_name_search': family_name_search,
+        'id_search': id_search,
+
+        # Flags
+        'pa_kryer': pa_kryer,
+        'me_pretendim': me_pretendim,
+        'kryer_1': kryer_1,
+        'kryer_2': kryer_2,
+        'kryer_3': kryer_3,
         'pa_afte': pa_afte,
         'paguar': paguar,
         'periudha_1': periudha_1,
@@ -210,34 +256,54 @@ def ushtar_retrieve(request, pk):
         'dite_te_kryera_1': dite_te_kryera_1,
         'dite_te_kryera_2': dite_te_kryera_2,
         'dite_te_kryera_3': dite_te_kryera_3,
-        }
+    }
 
-    template_name = 'ushtar/u_retrieve_me_kosdakt.html'
-
-    return render(request, template_name, context)
+    return render(request, 'ushtar/u_retrieve_me_kosdakt.html', context)
 
 
 def pdf_me_kosdakt(request, pk):
-    obj = get_object_or_404(Ushtari, pk=pk)
+
+    # 1) Input-et e kërkimit (përdoren kur pk == 0)
+    name_search = (request.GET.get('name_search') or '').strip()
+    father_name_search = (request.GET.get('father_name_search') or '').strip()
+    family_name_search = (request.GET.get('family_name_search') or '').strip()
+    id_search = (request.GET.get('id_search') or '').strip()
+    plus = (request.GET.get('plus') or '').strip()
+
+    no_result = False
+
+    # 2) Rast special: pk == 0 -> "no result" ushtar fiktiv
+    if pk == 0:
+        obj = Ushtari(
+            name=name_search or '—',
+            father_name=father_name_search or '—',
+            family_name=family_name_search or '—',
+            personal_sign=id_search or '—',
+        )
+        no_result = True
+
+        pa_kryer = False
+        me_pretendim = False
+        kryer_1 = kryer_2 = kryer_3 = False
+        paguar = False
+        pa_afte = False
+        periudha_1 = periudha_2 = periudha_3 = False
+        dite_te_kryera_1 = dite_te_kryera_2 = dite_te_kryera_3 = 0
+
+    else:
+        # 3) Rast normal: ushtar real nga DB
+        obj = get_object_or_404(Ushtari, pk=pk)
+
+        (pa_kryer, me_pretendim, kryer_1, kryer_2, kryer_3,
+         paguar, pa_afte, periudha_1, periudha_2, periudha_3,
+         dite_te_kryera_1, dite_te_kryera_2, dite_te_kryera_3) = flags_helper(request, obj)
+
+        # Mund t’i lësh search fields siç janë; në template përdoren vetëm në no_result anyway
+
     titullari_aktiv = Titullari.objects.filter(is_active=True).first()
     firmetaret = Firmat.objects.filter(is_active=True).first()
-    pa_kryer, kryer_1, kryer_2, kryer_3, paguar, pa_afte, periudha_1, periudha_2, periudha_3, dite_te_kryera_1, dite_te_kryera_2, dite_te_kryera_3 = flags_helper(obj.pk)
-
-    pa_kryer = pa_kryer
-    kryer_1 = kryer_1
-    kryer_2 = kryer_2
-    kryer_3 = kryer_3
-    paguar = paguar
-    pa_afte = pa_afte
-    periudha_1 = periudha_1
-    periudha_2 = periudha_2
-    periudha_3 = periudha_3
-    dite_te_kryera_1 = dite_te_kryera_1
-    dite_te_kryera_2 = dite_te_kryera_2
-    dite_te_kryera_3 = dite_te_kryera_3
 
     base_url = request.build_absolute_uri('/')
-
     koka_shkrese_url = request.build_absolute_uri(static('img/koka_e_shkreses.jpg'))
 
     context = {
@@ -245,11 +311,20 @@ def pdf_me_kosdakt(request, pk):
         'koka_e_shkreses': koka_shkrese_url,
         'titullari_aktiv': titullari_aktiv,
         'firmetaret': firmetaret,
-        
-        'pa_kryer': pa_kryer, 
-        'kryer_1': kryer_1, 
-        'kryer_2': kryer_2, 
-        'kryer_3': kryer_3, 
+
+        'no_result': no_result,
+        'plus': plus,
+
+        'name_search': name_search,
+        'father_name_search': father_name_search,
+        'family_name_search': family_name_search,
+        'id_search': id_search,
+
+        'pa_kryer': pa_kryer,
+        'me_pretendim': me_pretendim,
+        'kryer_1': kryer_1,
+        'kryer_2': kryer_2,
+        'kryer_3': kryer_3,
         'paguar': paguar,
         'pa_afte': pa_afte,
         'periudha_1': periudha_1,
@@ -271,31 +346,53 @@ def pdf_me_kosdakt(request, pk):
     ).write_pdf(stylesheets=[css])
 
     response = HttpResponse(pdf_bytes, content_type="application/pdf")
-    response["Content-Disposition"] = f'inline; filename=\"ushtar_{pk}.pdf\"'
+    response["Content-Disposition"] = f'inline; filename=\"_{obj.name}_{obj.family_name}.pdf\"'
     return response
 
 
 def pdf_pa_kosdakt(request, pk):
-    obj = get_object_or_404(Ushtari, pk=pk)
+    # 1) Marrim input-et e kërkimit (duhen për rastin pk == 0)
+    name_search = (request.GET.get('name_search') or '').strip()
+    father_name_search = (request.GET.get('father_name_search') or '').strip()
+    family_name_search = (request.GET.get('family_name_search') or '').strip()
+    id_search = (request.GET.get('id_search') or '').strip()
+
+    no_result = False
+
+    # 2) Rast special: pk == 0 -> "no result" soldier fiktiv
+    if pk == 0:
+        obj = Ushtari(
+            name=name_search or '—',
+            father_name=father_name_search or '—',
+            family_name=family_name_search or '—',
+            personal_sign=id_search or '—',
+        )
+        no_result = True
+
+        # Asnjë llogaritje flags; i vendosim manualisht
+        pa_kryer = False
+        me_pretendim = False
+        kryer_1 = kryer_2 = kryer_3 = False
+        paguar = False
+        pa_afte = False
+        periudha_1 = periudha_2 = periudha_3 = False
+        dite_te_kryera_1 = dite_te_kryera_2 = dite_te_kryera_3 = 0
+
+    else:
+        # Rast normal: ushtar real nga DB
+        obj = get_object_or_404(Ushtari, pk=pk)
+
+        (pa_kryer, me_pretendim, kryer_1, kryer_2, kryer_3,
+         paguar, pa_afte, periudha_1, periudha_2, periudha_3,
+         dite_te_kryera_1, dite_te_kryera_2, dite_te_kryera_3) = flags_helper(request, obj)
+
+        # Në rast normal nuk na duhen këto në template, por mund t’i lëmë bosh
+        name_search = father_name_search = family_name_search = id_search = ''
+
     titullari_aktiv = Titullari.objects.filter(is_active=True).first()
     firmetaret = Firmat.objects.filter(is_active=True).first()
-    pa_kryer, kryer_1, kryer_2, kryer_3, paguar, pa_afte, periudha_1, periudha_2, periudha_3, dite_te_kryera_1, dite_te_kryera_2, dite_te_kryera_3 = flags_helper(obj.pk)
-
-    pa_kryer = pa_kryer
-    kryer_1 = kryer_1
-    kryer_2 = kryer_2
-    kryer_3 = kryer_3
-    paguar = paguar
-    pa_afte = pa_afte
-    periudha_1 = periudha_1
-    periudha_2 = periudha_2
-    periudha_3 = periudha_3
-    dite_te_kryera_1 = dite_te_kryera_1
-    dite_te_kryera_2 = dite_te_kryera_2
-    dite_te_kryera_3 = dite_te_kryera_3
 
     base_url = request.build_absolute_uri('/')
-
     koka_shkrese_url = request.build_absolute_uri(static('img/koka_e_shkreses.jpg'))
 
     context = {
@@ -303,11 +400,18 @@ def pdf_pa_kosdakt(request, pk):
         'koka_e_shkreses': koka_shkrese_url,
         'titullari_aktiv': titullari_aktiv,
         'firmetaret': firmetaret,
-        
-        'pa_kryer': pa_kryer, 
-        'kryer_1': kryer_1, 
-        'kryer_2': kryer_2, 
-        'kryer_3': kryer_3, 
+
+        'no_result': no_result,
+        'name_search': name_search,
+        'father_name_search': father_name_search,
+        'family_name_search': family_name_search,
+        'id_search': id_search,
+
+        'pa_kryer': pa_kryer,
+        'me_pretendim': me_pretendim,
+        'kryer_1': kryer_1,
+        'kryer_2': kryer_2,
+        'kryer_3': kryer_3,
         'paguar': paguar,
         'pa_afte': pa_afte,
         'periudha_1': periudha_1,
@@ -329,9 +433,5 @@ def pdf_pa_kosdakt(request, pk):
     ).write_pdf(stylesheets=[css])
 
     response = HttpResponse(pdf_bytes, content_type="application/pdf")
-    response["Content-Disposition"] = f'inline; filename=\"ushtar_{pk}.pdf\"'
+    response["Content-Disposition"] = f'inline; filename=\"_{obj.name}_{obj.family_name}.pdf\"'
     return response
-
-
-
-

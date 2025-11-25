@@ -1,156 +1,269 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="sq">
-    <head>
+  <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Vërtetimi</title>
-    <!-- (Optional) Bootstrap for your form-control classes -->
+    <title>Vërtetimi me siglim</title>
+
     <link rel="stylesheet" href="{% static 'css/fleta_a4.css' %}">
     <link rel="stylesheet" href="{% static 'css/global_font.css' %}">
-    </head>
-    <body class="container">
-        <header>
-            <img src="{% static 'img/koka_e_shkreses.jpg' %}" alt="Koka e shkresës image" style="width: 100%;">
-            <div style="text-align: center;">
-                <span style=" font-size: 7pt; font-weight: bold; font-family: 'Arial Black', Gadget, sans-serif;">R E P U B L I K A&nbsp;&nbsp;E&nbsp;&nbsp;S H Q I P Ë R I S Ë</SPAN><br>
-                <span style=" font-size: 14pt; font-weight: bold; font-family: 'Baskerville Old Face', serif; ">MINISTRIA E MBROJTJES</SPAN><br>
-                <span style="font-size: 12pt; font-family: 'Times New Roman', Times, serif; font-weight: bold; ">SHTABI I PËRGJITHSHËM I FORCAVE TË ARMATOSURA</SPAN><br>
-                <span style="font-size: 12pt; font-family: 'Times New Roman', Times, serif; font-weight: bold; ">QENDRA E PERSONEL REKRUTIMIT</SPAN><br>
-            </div>
-            <div><br><br></div>
-            <div style="text-align: center;">
-                <div style="display:flex; justify-content: space-between; font-size: 12pt; font-family: 'Times New Roman', Times, serif; ">
-                    <span>Nr. ___________ prot.</span>     <span>Tiranë, më ____.____.{% now "Y" %}</span>
-                </div>
-                <br>
-                <span style="font-size: 12pt; font-family: 'Times New Roman', Times, serif; font-weight: bold; ">VËRTETIM</SPAN><br><br>
-            </div>
+    <link rel="stylesheet" href="{% static 'css/ushtar/u_retrieve.css' %}">
+  </head>
 
-        </header>  
+  <body class="container">
+    <header>
+      <img src="{% static 'img/koka_e_shkreses.jpg' %}"
+           alt="Koka e shkresës image"
+           style="width: 100%;">
 
-        <main>
-            <div style="text-align: justify; font-size: 12pt; font-family: 'Times New Roman', Times, serif;">      
-                {% if kryer_1 %}
-                    <span>
-                        Vërtetojmë se shtetasi <strong style="text-transform: capitalize;">{{ obj.name }} {{ obj.father_name }} <span style="text-transform: uppercase;">{{ obj.family_name }}</span></strong>, 
-                        i vitlindjes {{ obj.dob.year }}, me shenjë personale <span id="no-wrap">{{ obj.personal_sign }}</span>, ka kryer Shërbimin e Detyrueshëm Ushtarak Aktiv nga data {{ obj.shdua_start_date_1|date:"d.m.Y" }} deri më {{ obj.shdua_finish_date_1|date:"d.m.Y" }}, 
-                        në Repartin Ushtarak nr. {{ obj.unit_nr_1st_time }}. 
-                    </span>
-                    <br><br>
-                    <span>Lëshohet për efekt dokumenti.</span>
-                    <br><br><br>
-                {% elif kryer_2 %}
-                    <span>
-                        Vërtetojmë se shtetasi <strong style="text-transform: capitalize;">{{ obj.name }} {{ obj.father_name }} <span style="text-transform: uppercase;">{{ obj.family_name }}</span></strong>, 
-                        i vitlindjes {{ obj.dob.year }}, me shenjë personale <span id="no-wrap">{{ obj.personal_sign }}</span>, ka kryer Shërbimin e Detyrueshëm Ushtarak Aktiv nga data {{ obj.shdua_start_date_2|date:"d.m.Y" }} deri më {{ obj.shdua_finish_date_1|date:"d.m.Y" }}, 
-                        në Repartin Ushtarak nr. {{ obj.unit_nr_1st_time }} dhe nga data {{ obj.shdua_start_date_2|date:"d.m.Y" }} deri më {{ obj.shdua_finish_date_2|date:"d.m.Y" }}, 
-                        në Repartin Ushtarak nr. {{ obj.unit_nr_2nd_time }}. 
-                    </span>
-                    <br><br>
-                    <span>Lëshohet për efekt dokumenti.</span>
-                    <br><br><br>                                    
-                {% elif kryer_3 %}
-                    <span>
-                        Vërtetojmë se shtetasi <strong style="text-transform: capitalize;">{{ obj.name }} {{ obj.father_name }} <span style="text-transform: uppercase;">{{ obj.family_name }}</span></strong>, 
-                        i vitlindjes {{ obj.dob.year }}, me shenjë personale <span id="no-wrap">{{ obj.personal_sign }}</span>, ka kryer Shërbimin e Detyrueshëm Ushtarak Aktiv në tri periudha:<br>
-                        1. Periudha e parë, nga data {{ obj.shdua_start_date_1|date:"d.m.Y" }} deri më {{ obj.shdua_finish_date_1|date:"d.m.Y" }} në Repartin Ushtarak nr. {{ obj.unit_nr_1st_time }}.<br>
-                        2. Periudha e dytë, nga data {{ obj.shdua_start_date_2|date:"d.m.Y" }} deri më {{ obj.shdua_finish_date_2|date:"d.m.Y" }} në Repartin Ushtarak nr. {{ obj.unit_nr_2nd_time }}. <br> 
-                        3. Periudha e tretë, nga data {{ obj.shdua_start_date_3|date:"d.m.Y" }} deri më {{ obj.shdua_finish_date_3|date:"d.m.Y" }} në Repartin Ushtarak nr. {{ obj.unit_nr_3rd_time }}.   
-                    </span>
-                    <br><br>
-                    <span>Lëshohet për efekt dokumenti.</span>
-                    <br><br><br>                                    
-                {% elif paguar %}
-                    <span>
-                        Vërtetojmë se shtetasi <strong style="text-transform: capitalize;">{{ obj.name }} {{ obj.father_name }} <span style="text-transform: uppercase;">{{ obj.family_name }}</span></strong>, 
-                        i vitlindjes {{ obj.dob.year }}, me shenjë personale <span id="no-wrap">{{ obj.personal_sign }}</span>, e ka shlyer kryerjen e Shërbimit të Detyrueshëm Ushtarak Aktiv nëpërmjet pagesës, me mandat arkëtimi nr. {{ obj.nr_act_paguar }}, dt. {{obj.date_of_act_paguar|date:"d.m.Y" }}. 
-                    </span>
-                    <br><br>
-                    <span>Lëshohet për efekt dokumenti.</span>
-                    <br><br><br>
-                {% elif pa_afte %}
-                    <span>
-                        Vërtetojmë se shtetasi <strong style="text-transform: capitalize;">{{ obj.name }} {{ obj.father_name }} <span style="text-transform: uppercase;">{{ obj.family_name }}</span></strong>, 
-                        i vitlindjes {{ obj.dob.year }}, me shenjë personale <span id="no-wrap">{{ obj.personal_sign }}</span>, nuk e ka kryer Shërbimin e Detyrueshëm Ushtarak Aktiv. Është deklaruar i paaftë nga vendimi i komisionit mjekësor ushtarak, arti {{ obj.epicrize }}. 
-                    </span>
-                    <br><br>
-                    <span>Lëshohet për efekt dokumenti.</span>
-                    <br><br><br>
-                {% elif pa_kryer %}
-                    <span>
-                        Vërtetojmë se shtetasi <strong style="text-transform: capitalize;">{{ obj.name }} {{ obj.father_name }} <span style="text-transform: uppercase;">{{ obj.family_name }}</span></strong>, 
-                        i vitlindjes {{ obj.dob.year }}, me shenjë personale <span id="no-wrap">{{ obj.personal_sign }}</span>, bazuar në të dhënat që disponojmë, nuk e ka kryer Shërbimin e Detyrueshëm Ushtarak Aktiv. 
-                    </span>
-                    <br><br>
-                    <span>Lëshohet për efekt dokumenti.</span>
-                    <br><br><br>
+      <div>
+        <!-- Butoni Kthehu (fshehet në PDF nga .no-pdf) -->
+        <div class="no-pdf">
+          <a href="{% url 'ushtar_list' %}" class="kthehu-button">
+            &larr; Kthehu
+          </a>
+        </div>
 
-                {% endif %}
-            </div>
-            <!-- <div style="font-size: 10pt;">
-                ---------------------------------------------
-                <p>DEBUG: pa_kryer = {{ pa_kryer }}</p>
-                <p>DEBUG: kryer_1 = {{ kryer_1 }}</p>
-                <p>DEBUG: kryer_2 = {{ kryer_2 }}</p>
-                <p>DEBUG: kryer_3 = {{ kryer_3 }}</p>
-                <p>DEBUG: paguar = {{ paguar }}</p>
-                <p>DEBUG: i paafte = {{ pa_afte }}</p>
-                <p>DEBUG: nje periudhe = {{ periudha_1 }}</p>
-                <p>DEBUG: dy periudha = {{ periudha_2 }}</p>
-                <p>DEBUG: tre periudha = {{ periudha_3 }}</p>
-                ---------------------------------------------
-            </div> -->
-            <div class="titullari">
-                <span>
-                    <strong style="text-transform: uppercase">{{ titullari_aktiv.funksioni }}</strong> 
-                    <br>
-                    <strong style="text-transform: capitalize">
-                        {{ titullari_aktiv.grada }} {{ titullari_aktiv.emri }} {{ titullari_aktiv.mbiemri }}
-                    </strong>
-                </span>
-            </div>
+        <div style="text-align: center;">
+          <span style="font-size: 7pt; font-weight: bold; font-family: 'Arial Black', Gadget, sans-serif;">
+            R E P U B L I K A&nbsp;&nbsp;E&nbsp;&nbsp;S H Q I P Ë R I S Ë
+          </span><br>
+          <span style="font-size: 14pt; font-weight: bold; font-family: 'Baskerville Old Face', serif;">
+            MINISTRIA E MBROJTJES
+          </span><br>
+          <span style="font-size: 12pt; font-family: 'Times New Roman', Times, serif; font-weight: bold;">
+            SHTABI I PËRGJITHSHËM I FORCAVE TË ARMATOSURA
+          </span><br>
+          <span style="font-size: 12pt; font-family: 'Times New Roman', Times, serif; font-weight: bold;">
+            QENDRA E PERSONEL REKRUTIMIT
+          </span><br>
+        </div>
+      </div>
 
-            <div class="no-pdf">
-                <a href="{% url 'pdf_me_kosdakt' pk=obj.pk %}"
-                    class="btn btn-primary btn-lg px-4 py-1 d-inline-flex align-items-center gap-2 rounded-3 shadow-sm align-self-start"
-                    style="min-width: 180px; ">
-                   PDF me siglim (+)
-                </a>
-            </div>
-            <div class="no-pdf">
-                <a href="{% url 'pdf_pa_kosdakt' pk=obj.pk %}"
-                    class="btn btn-primary btn-lg px-4 py-1 d-inline-flex align-items-center gap-2 rounded-3 shadow-sm align-self-start"
-                    style="min-width: 180px; ">
-                   PDF pa siglim
-                </a>
-            </div>
+      <div><br><br></div>
 
+      <div style="text-align: center;">
+        <div style="display:flex; justify-content: space-between; font-size: 12pt; font-family: 'Times New Roman', Times, serif;">
+          <span>Nr. ___________ prot.</span>
+          <span>Tiranë, më ____.____.{% now "Y" %}</span>
+        </div>
+        <br>
+        <span style="font-size: 12pt; font-family: 'Times New Roman', Times, serif; font-weight: bold;">
+          VËRTETIM
+        </span><br><br>
+      </div>
+    </header>
+
+    <main>
+      <div style="text-align: justify; font-size: 12pt; font-family: 'Times New Roman', Times, serif;">
+
+        {# ==================== 1) RASTI "NO RESULT" ==================== #}
+        {% if no_result %}
+          <p>
+            Vërtetojmë se, bazuar në të dhënat që disponojmë në regjistrat e Qendrës së Personel Rekrutimit,
+            për kërkimin e kryer nuk rezulton asnjë shtetas i regjistruar për Shërbimin e Detyrueshëm Ushtarak Aktiv
+            me emrin
+            <span style="font-weight: bold;">
+              {{ name_search }} {{ father_name_search }} {{ family_name_search }}
+            </span>.
+          </p>
+          <p>
+            Shënim: Ju lutemi na dërgoni informacion nëse ka bërë ndryshim gjeneralitetesh
+            ose jo dega që ju ka nisur ushtar. Nëse nuk keni bërë ndryshime, atëherë na
+            dërgoni librezë pune, librezë ushtarake origjinale ose fotokopje të noterizuara dhe një
+            akt-verifikim për vitet e punës nga sigurimet shoqërore. Dokumentet na i dërgoni me postë.
+          </p>
+
+        {# ==================== 2) RASTI NORMAL (USHTAR REAL) ==================== #}
+        {% else %}
+
+          {# --- a) Ka kryer SHDUA në 3 periudha / 2 periudha / 1 periudhë --- #}
+          {% if kryer_3 %}
+            <span>
+              Vërtetojmë se shtetasi
+              <strong style="text-transform: capitalize;">
+                {{ obj.name }} {{ obj.father_name }}
+                <span style="text-transform: uppercase;">{{ obj.family_name }}</span>
+              </strong>,
+              i vitlindjes {{ obj.dob.year }}, me shenjë personale
+              <span id="no-wrap">{{ obj.personal_sign }}</span>,
+              ka kryer Shërbimin e Detyrueshëm Ushtarak Aktiv në tri periudha:<br>
+              1. Periudha e parë, nga data {{ obj.shdua_start_date_1|date:"d.m.Y" }}
+                 deri më {{ obj.shdua_finish_date_1|date:"d.m.Y" }} në Repartin Ushtarak nr. {{ obj.unit_nr_1st_time }}.<br>
+              2. Periudha e dytë, nga data {{ obj.shdua_start_date_2|date:"d.m.Y" }}
+                 deri më {{ obj.shdua_finish_date_2|date:"d.m.Y" }} në Repartin Ushtarak nr. {{ obj.unit_nr_2nd_time }}.<br>
+              3. Periudha e tretë, nga data {{ obj.shdua_start_date_3|date:"d.m.Y" }}
+                 deri më {{ obj.shdua_finish_date_3|date:"d.m.Y" }} në Repartin Ushtarak nr. {{ obj.unit_nr_3rd_time }}.
+            </span>
+
+          {% elif kryer_2 %}
+            <span>
+              Vërtetojmë se shtetasi
+              <strong style="text-transform: capitalize;">
+                {{ obj.name }} {{ obj.father_name }}
+                <span style="text-transform: uppercase;">{{ obj.family_name }}</span>
+              </strong>,
+              i vitlindjes {{ obj.dob.year }}, me shenjë personale
+              <span id="no-wrap">{{ obj.personal_sign }}</span>,
+              ka kryer Shërbimin e Detyrueshëm Ushtarak Aktiv nga data
+              {{ obj.shdua_start_date_1|date:"d.m.Y" }} deri më {{ obj.shdua_finish_date_1|date:"d.m.Y" }},
+              në Repartin Ushtarak nr. {{ obj.unit_nr_1st_time }} dhe nga data
+              {{ obj.shdua_start_date_2|date:"d.m.Y" }} deri më {{ obj.shdua_finish_date_2|date:"d.m.Y" }},
+              në Repartin Ushtarak nr. {{ obj.unit_nr_2nd_time }}.
+            </span>
+
+          {% elif kryer_1 %}
+            <span>
+              Vërtetojmë se shtetasi
+              <strong style="text-transform: capitalize;">
+                {{ obj.name }} {{ obj.father_name }}
+                <span style="text-transform: uppercase;">{{ obj.family_name }}</span>
+              </strong>,
+              i vitlindjes {{ obj.dob.year }}, me shenjë personale
+              <span id="no-wrap">{{ obj.personal_sign }}</span>,
+              ka kryer Shërbimin e Detyrueshëm Ushtarak Aktiv nga data
+              {{ obj.shdua_start_date_1|date:"d.m.Y" }} deri më {{ obj.shdua_finish_date_1|date:"d.m.Y" }},
+              në Repartin Ushtarak nr. {{ obj.unit_nr_1st_time }}.
+            </span>
+          {% endif %}
+
+          {# --- b) Ka shlyer me pagesë ose është i paaftë --- #}
+          {% if paguar %}
             <br><br>
+            <span>
+              Vërtetojmë se shtetasi
+              <strong style="text-transform: capitalize;">
+                {{ obj.name }} {{ obj.father_name }}
+                <span style="text-transform: uppercase;">{{ obj.family_name }}</span>
+              </strong>,
+              i vitlindjes {{ obj.dob.year }}, me shenjë personale
+              <span id="no-wrap">{{ obj.personal_sign }}</span>,
+              e ka shlyer kryerjen e Shërbimit të Detyrueshëm Ushtarak Aktiv nëpërmjet pagesës,
+              me mandat arkëtimi nr. {{ obj.nr_act_paguar }}, dt. {{ obj.date_of_act_paguar|date:"d.m.Y" }}.
+            </span>
 
-        </main>
+          {% elif pa_afte %}
+            <br><br>
+            <span>
+              Vërtetojmë se shtetasi
+              <strong style="text-transform: capitalize;">
+                {{ obj.name }} {{ obj.father_name }}
+                <span style="text-transform: uppercase;">{{ obj.family_name }}</span>
+              </strong>,
+              i vitlindjes {{ obj.dob.year }}, me shenjë personale
+              <span id="no-wrap">{{ obj.personal_sign }}</span>,
+              nuk e ka kryer Shërbimin e Detyrueshëm Ushtarak Aktiv.
+              Është deklaruar i paaftë nga vendimi i komisionit mjekësor ushtarak, arti {{ obj.epicrize }}.
+            </span>
+          {% endif %}
 
-        <footer class="site-footer">
-            <div class="footer-inner">
+          {# --- c) PA KRYER (me ose pa pretendim) --- #}
+          {% if pa_kryer %}
+            <br><br>
+            <span>
+              Vërtetojmë se shtetasi
+              <strong style="text-transform: capitalize;">
+                {{ obj.name }} {{ obj.father_name }}
+                <span style="text-transform: uppercase;">{{ obj.family_name }}</span>
+              </strong>,
+              i vitlindjes {{ obj.dob.year }}, me shenjë personale
+              <span id="no-wrap">{{ obj.personal_sign }}</span>,
+              bazuar në të dhënat që disponojmë, nuk e ka kryer Shërbimin e Detyrueshëm Ushtarak Aktiv.
+              {% if me_pretendim %}
+                <br>
+                Shënim: Ju lutemi na dërgoni librezë pune ose ushtrie (nëse i dispononi)
+                dhe një akt-verifikimi për vitet e punës nga sigurimet shoqërore,
+                origjinale ose fotokopje të noterizuara. Dokumentet duhet t’i dërgoni me postë.
+              {% endif %}
+            </span>
+          {% endif %}
 
-                <!-- FIRMETARËT TANI JANË PJESË E FOOTER-IT -->
-                <div class="firmetaret">
-                    <div>Konceptoi:</div><div>{{ firmetaret.hartoi }}</div>
-                    <div>Pranoi:</div><div>{{ firmetaret.kontrolloi }}</div>
-                    <div>Miratoi:</div><div>{{ firmetaret.miratoi }}</div>    
-                </div>
+        {% endif %} {# /no_result #}
 
-                <!-- Vija + rreshti me adresë/telefon/faqe -->
-                <div class="footer-line"></div>
+        <br><br>
+        <span>Lëshohet për efekt dokumenti.</span>
+        <br><br><br>
+      </div>
 
-                <div class="footer-meta">
-                    <span>Adresa: Rr. "Kongresi i Manastirit", Garnizoni Skënderbej, Tiranë</span>
-                    <span>Tel: 510-1036</span>
-                    <span>Faqe 1</span>
-                </div>
-            </div>
-        </footer>
-    </body>
+      <div class="titullari">
+        <span>
+          <strong style="text-transform: uppercase">{{ titullari_aktiv.funksioni }}</strong><br>
+          <strong style="text-transform: capitalize">
+            {{ titullari_aktiv.grada }} {{ titullari_aktiv.emri }} {{ titullari_aktiv.mbiemri }}
+          </strong>
+        </span>
+      </div>
+
+      <br><br>
+
+      {# Dropdoën "Plus" vetëm kur kemi pa_kryer dhe nuk jemi në no_result #}
+      {% if pa_kryer and not no_result %}
+        <form method="GET" class="plus no-pdf">
+          <label class="label" for="plus">Plus:</label>
+          <select id="plus" name="plus">
+            <option value="" {% if not plus %}selected{% endif %}>--Zgjidh--</option>
+            <option value="me_pretendim" {% if plus == 'me_pretendim' %}selected{% endif %}>
+              Me pretendim (Model 2+)
+            </option>
+          </select>
+          <button type="submit">Shto paragraf</button>
+        </form>
+        <br>
+      {% endif %}
+
+      {# ==================== BUTONËT PDF ==================== #}
+      <div class="no-pdf">
+        {% if no_result %}
+          <a href="{% url 'pdf_me_kosdakt' pk=0 %}?name_search={{ name_search|urlencode }}&father_name_search={{ father_name_search|urlencode }}&family_name_search={{ family_name_search|urlencode }}&id_search={{ id_search|urlencode }}&plus={{ plus|urlencode }}"
+             class="btn btn-primary btn-lg px-4 py-1 d-inline-flex align-items-center gap-2 rounded-3 shadow-sm align-self-start"
+             style="min-width: 180px;">
+            PDF me siglim (+)
+          </a>
+        {% else %}
+          <a href="{% url 'pdf_me_kosdakt' pk=obj.pk %}?plus={{ plus|urlencode }}"
+             class="btn btn-primary btn-lg px-4 py-1 d-inline-flex align-items-center gap-2 rounded-3 shadow-sm align-self-start"
+             style="min-width: 180px;">
+            PDF me siglim (+)
+          </a>
+        {% endif %}
+      </div>
+
+      <div class="no-pdf">
+        {% if no_result %}
+          <a href="{% url 'pdf_pa_kosdakt' pk=0 %}?name_search={{ name_search|urlencode }}&father_name_search={{ father_name_search|urlencode }}&family_name_search={{ family_name_search|urlencode }}&id_search={{ id_search|urlencode }}&plus={{ plus|urlencode }}"
+             class="btn btn-primary btn-lg px-4 py-1 d-inline-flex align-items-center gap-2 rounded-3 shadow-sm align-self-start"
+             style="min-width: 180px;">
+            PDF pa siglim
+          </a>
+        {% else %}
+          <a href="{% url 'pdf_pa_kosdakt' pk=obj.pk %}?plus={{ plus|urlencode }}"
+             class="btn btn-primary btn-lg px-4 py-1 d-inline-flex align-items-center gap-2 rounded-3 shadow-sm align-self-start"
+             style="min-width: 180px;">
+            PDF pa siglim
+          </a>
+        {% endif %}
+      </div>
+
+      <br><br>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="firmetaret">
+          <div>Konceptoi:</div><div>{{ firmetaret.hartoi }}</div>
+          <div>Pranoi:</div><div>{{ firmetaret.kontrolloi }}</div>
+          <div>Miratoi:</div><div>{{ firmetaret.miratoi }}</div>
+        </div>
+
+        <div class="footer-line"></div>
+
+        <div class="footer-meta">
+          <span>Adresa: Rr. "Kongresi i Manastirit", Garnizoni Skënderbej, Tiranë</span>
+          <span>Tel: 510-1036</span>
+          <span>Faqe 1</span>
+        </div>
+      </div>
+    </footer>
+  </body>
 </html>
-
-
