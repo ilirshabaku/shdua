@@ -12,6 +12,7 @@ urlpatterns = [
     path('ushtar/<int:pk>/update/', ushtar_update, name='ushtar_update'),
     path('ushtar/<int:pk>/delete/', ushtar_delete, name='ushtar_delete'),
 
+
     path('titullari_dashboard/', titullari_dashboard, name='titullari_dashboard'),
     path('titullari_list/', titullari_list, name='titullari_list'),
     path('titullari_create/', titullari_create, name='titullari_create'),

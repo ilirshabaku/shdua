@@ -335,3 +335,34 @@ h1 {
     gap: 0.75rem;
 }
 .btn-wide { min-width: 180px; }
+
+
+.shdua-margin {
+    width: 441px;
+    height: 241px;
+    border-radius: 12px;
+    background-color: #6c757d;          /* neutral grey */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* inner “badge” */
+.shdua-inner {
+    width: 400px;
+    height: 200px;
+    border-radius: 12px;
+    border: 2px solid #ffffff;
+    background: rgba(255, 255, 255, 0.05); /* very light overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 56pt;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    letter-spacing: 10px;
+    color: #ffffff;
+    text-transform: uppercase;
+}

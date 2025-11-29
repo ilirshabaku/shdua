@@ -52,7 +52,7 @@ class UshtariForm(forms.ModelForm):
 
     suffix_nr = forms.CharField(
         max_length=20,
-        label='Mbrapashtesa e kodit',
+        label='Prapashtesa e shenjës',
         required=False,
         widget=forms.TextInput(attrs={'class': 'form-control', 'style': 'width: 220px;'})
     )

@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{% static 'css/fleta_a4.css' %}">
     <link rel="stylesheet" href="{% static 'css/global_font.css' %}">
     <link rel="stylesheet" href="{% static 'css/ushtar/u_retrieve.css' %}">
+    <link rel="stylesheet" href="{% static 'css/ushtar/print_button.css' %}">
   </head>
 
   <body class="container">
@@ -118,8 +119,8 @@
               Vërtetojmë se shtetasi
               <strong style="text-transform: capitalize;">
                 {{ obj.name }} {{ obj.father_name }}
-                <span style="text-transform: uppercase;">{{ obj.family_name }}</span>
-              </strong>,
+                <span style="text-transform: uppercase;">{{ obj.family_name }}</span>,
+              </strong>
               i vitlindjes {{ obj.dob.year }}, me shenjë personale
               <span id="no-wrap">{{ obj.personal_sign }}</span>,
               ka kryer Shërbimin e Detyrueshëm Ushtarak Aktiv nga data
@@ -213,36 +214,40 @@
       {% endif %}
 
       {# ==================== BUTONËT PDF ==================== #}
-      <div class="no-pdf">
-        {% if no_result %}
-          <a href="{% url 'pdf_me_kosdakt' pk=0 %}?name_search={{ name_search|urlencode }}&father_name_search={{ father_name_search|urlencode }}&family_name_search={{ family_name_search|urlencode }}&id_search={{ id_search|urlencode }}&plus={{ plus|urlencode }}"
-             class="btn btn-primary btn-lg px-4 py-1 d-inline-flex align-items-center gap-2 rounded-3 shadow-sm align-self-start"
-             style="min-width: 180px;">
-            PDF me siglim (+)
-          </a>
-        {% else %}
-          <a href="{% url 'pdf_me_kosdakt' pk=obj.pk %}?plus={{ plus|urlencode }}"
-             class="btn btn-primary btn-lg px-4 py-1 d-inline-flex align-items-center gap-2 rounded-3 shadow-sm align-self-start"
-             style="min-width: 180px;">
-            PDF me siglim (+)
-          </a>
-        {% endif %}
-      </div>
+      <div>
+        <div>
+          <div class="no-pdf">
+            {% if no_result %}
+              <a href="{% url 'pdf_me_kosdakt' pk=0 %}?name_search={{ name_search|urlencode }}&father_name_search={{ father_name_search|urlencode }}&family_name_search={{ family_name_search|urlencode }}&id_search={{ id_search|urlencode }}&plus={{ plus|urlencode }}"
+                class="btn btn-primary btn-lg px-4 py-1 d-inline-flex align-items-center gap-2 rounded-3 shadow-sm align-self-start"
+                style="min-width: 180px;">
+                PDF me siglim (+)
+              </a>
+            {% else %}
+              <a href="{% url 'pdf_me_kosdakt' pk=obj.pk %}?plus={{ plus|urlencode }}"
+                class="btn btn-primary btn-lg px-4 py-1 d-inline-flex align-items-center gap-2 rounded-3 shadow-sm align-self-start"
+                style="min-width: 180px;">
+                PDF me siglim (+)
+              </a>
+            {% endif %}
+          </div>
 
-      <div class="no-pdf">
-        {% if no_result %}
-          <a href="{% url 'pdf_pa_kosdakt' pk=0 %}?name_search={{ name_search|urlencode }}&father_name_search={{ father_name_search|urlencode }}&family_name_search={{ family_name_search|urlencode }}&id_search={{ id_search|urlencode }}&plus={{ plus|urlencode }}"
-             class="btn btn-primary btn-lg px-4 py-1 d-inline-flex align-items-center gap-2 rounded-3 shadow-sm align-self-start"
-             style="min-width: 180px;">
-            PDF pa siglim
-          </a>
-        {% else %}
-          <a href="{% url 'pdf_pa_kosdakt' pk=obj.pk %}?plus={{ plus|urlencode }}"
-             class="btn btn-primary btn-lg px-4 py-1 d-inline-flex align-items-center gap-2 rounded-3 shadow-sm align-self-start"
-             style="min-width: 180px;">
-            PDF pa siglim
-          </a>
-        {% endif %}
+          <div class="no-pdf">
+            {% if no_result %}
+              <a href="{% url 'pdf_pa_kosdakt' pk=0 %}?name_search={{ name_search|urlencode }}&father_name_search={{ father_name_search|urlencode }}&family_name_search={{ family_name_search|urlencode }}&id_search={{ id_search|urlencode }}&plus={{ plus|urlencode }}"
+                class="btn btn-primary btn-lg px-4 py-1 d-inline-flex align-items-center gap-2 rounded-3 shadow-sm align-self-start"
+                style="min-width: 180px;">
+                PDF pa siglim
+              </a>
+            {% else %}
+              <a href="{% url 'pdf_pa_kosdakt' pk=obj.pk %}?plus={{ plus|urlencode }}"
+                class="btn btn-primary btn-lg px-4 py-1 d-inline-flex align-items-center gap-2 rounded-3 shadow-sm align-self-start"
+                style="min-width: 180px;">
+                PDF pa siglim
+              </a>
+            {% endif %}
+          </div>
+        </div>
       </div>
 
       <br><br>

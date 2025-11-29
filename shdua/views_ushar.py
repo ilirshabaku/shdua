@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.template.loader import render_to_string
@@ -24,13 +25,13 @@ def flags_helper(request, ushtari):
     dite_te_kryera_2 = 0
     dite_te_kryera_3 = 0
 
-    plus = request.GET.get('plus', '').strip()
+    plus = (request.GET.get('plus') or '').strip()
 
-
-    
+    # --- 1) Paguar ---
     if ushtari.nr_act_paguar and ushtari.date_of_act_paguar:
         paguar = True
 
+    # --- 2) Pa kryer (asnjë periudhë, asnjë pagesë, asnjë paaftësi) ---
     s1 = not ushtari.shdua_start_date_1 or not ushtari.shdua_finish_date_1
     s2 = not ushtari.nr_act_paguar or not ushtari.date_of_act_paguar
     s3 = not ushtari.epicrize or not ushtari.physical_exam == 'pa_afte'
@@ -38,44 +39,81 @@ def flags_helper(request, ushtari):
     if s1 and s2 and s3:
         pa_kryer = True
 
-
+    # Formulari 2+ (me pretendim)
     pretendim = (plus == 'me_pretendim')
     if pa_kryer and pretendim:
-        me_pretendim = True # Formulari 2+. E ka shenjen personale por nuk ka periudhe te regjistruar. Shenim: dergo dokumenta verifikimi
-        
-    if  ushtari.shdua_start_date_1 and ushtari.shdua_finish_date_1 \
-        and ushtari.shdua_start_date_1 <= ushtari.shdua_finish_date_1:
-        dite_te_kryera_1 = (ushtari.shdua_finish_date_1 - ushtari.shdua_start_date_1).days + 1
-        periudha_1 = True # Validiteti i periudhës
-        print(f"DEBUG: periudha_e_pare {dite_te_kryera_1} ditë")
-        if dite_te_kryera_1 >= 350:
-            kryer_1 = True # Validiteti i kryerjes
+        me_pretendim = True
 
-            
-    if periudha_1 and (ushtari.shdua_start_date_2 and ushtari.shdua_finish_date_2) \
-        and (ushtari.shdua_start_date_2 <= ushtari.shdua_finish_date_2):
-        dite_te_kryera_2 = (ushtari.shdua_finish_date_2 - ushtari.shdua_start_date_2).days + 1 
+    # --- 3) Periudha e parë ---
+    if (
+        ushtari.shdua_start_date_1 and ushtari.shdua_finish_date_1
+        and ushtari.shdua_start_date_1 <= ushtari.shdua_finish_date_1
+    ):
+        dite_te_kryera_1 = (ushtari.shdua_finish_date_1 - ushtari.shdua_start_date_1).days + 1
+        periudha_1 = True
+        print(f"DEBUG: periudha_e_pare {dite_te_kryera_1} ditë")
+
+        if dite_te_kryera_1 >= 350:
+            kryer_1 = True
+
+    # --- 4) Periudha e dytë ---
+    if (
+        periudha_1
+        and ushtari.shdua_start_date_2 and ushtari.shdua_finish_date_2
+        and ushtari.shdua_start_date_2 <= ushtari.shdua_finish_date_2
+    ):
+        dite_te_kryera_2 = (ushtari.shdua_finish_date_2 - ushtari.shdua_start_date_2).days + 1
         periudha_2 = True
         print(f"DEBUG: periudha_e_dyte {dite_te_kryera_2} ditë")
+
         if dite_te_kryera_1 + dite_te_kryera_2 >= 350:
             kryer_2 = True
 
-
-    if periudha_2 and (ushtari.shdua_start_date_3 and ushtari.shdua_finish_date_3) \
-        and (ushtari.shdua_start_date_3 <= ushtari.shdua_finish_date_3):
+    # --- 5) Periudha e tretë ---
+    if (
+        periudha_2
+        and ushtari.shdua_start_date_3 and ushtari.shdua_finish_date_3
+        and ushtari.shdua_start_date_3 <= ushtari.shdua_finish_date_3
+    ):
         dite_te_kryera_3 = (ushtari.shdua_finish_date_3 - ushtari.shdua_start_date_3).days + 1
         periudha_3 = True
         print(f"DEBUG: periudha_e_trete {dite_te_kryera_3} ditë")
+
         if dite_te_kryera_1 + dite_te_kryera_2 + dite_te_kryera_3 >= 350:
             kryer_3 = True
 
-    if ushtari.physical_exam == 'pa_afte' and ushtari.nr_act_physical_exam and ushtari.date_of_act_physical_exam \
-        and ushtari.epicrize:
-            pa_afte = True
+    # --- 6) Paaftësia fizike ---
+    if (
+        ushtari.physical_exam == 'pa_afte'
+        and ushtari.nr_act_physical_exam
+        and ushtari.date_of_act_physical_exam
+        and ushtari.epicrize
+    ):
+        pa_afte = True
 
+    # --- 7) Sigurojmë që vetëm një "kryer_X" të jetë aktiv sipas prioritetit ---
+    if kryer_3:
+        kryer_2 = False
+        kryer_1 = False
+    elif kryer_2:
+        kryer_1 = False
+    # nëse as kryer_3 as kryer_2 nuk janë True, kryer_1 mbetet siç është
 
-
-    return pa_kryer, me_pretendim, kryer_1, kryer_2, kryer_3, paguar, pa_afte, periudha_1, periudha_2, periudha_3, dite_te_kryera_1, dite_te_kryera_2, dite_te_kryera_3
+    return (
+        pa_kryer,
+        me_pretendim,
+        kryer_1,
+        kryer_2,
+        kryer_3,
+        paguar,
+        pa_afte,
+        periudha_1,
+        periudha_2,
+        periudha_3,
+        dite_te_kryera_1,
+        dite_te_kryera_2,
+        dite_te_kryera_3,
+    )
 
 
 def ushtar_create(request):
@@ -346,9 +384,11 @@ def pdf_me_kosdakt(request, pk):
     ).write_pdf(stylesheets=[css])
 
     response = HttpResponse(pdf_bytes, content_type="application/pdf")
-    response["Content-Disposition"] = f'inline; filename=\"_{obj.name}_{obj.family_name}.pdf\"'
-    return response
+    filename = f"_{obj.name}_{obj.family_name}.pdf"
+    response["Content-Disposition"] = f'inline; filename="{filename}"'
 
+
+    return response
 
 def pdf_pa_kosdakt(request, pk):
     # 1) Marrim input-et e kërkimit (duhen për rastin pk == 0)
@@ -433,5 +473,7 @@ def pdf_pa_kosdakt(request, pk):
     ).write_pdf(stylesheets=[css])
 
     response = HttpResponse(pdf_bytes, content_type="application/pdf")
-    response["Content-Disposition"] = f'inline; filename=\"_{obj.name}_{obj.family_name}.pdf\"'
-    return response
+
+    filename = f"_{obj.name}_{obj.family_name}.pdf"
+    response["Content-Disposition"] = f'inline; filename="{filename}"'
+    return response 
